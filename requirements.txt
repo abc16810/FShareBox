@@ -1,0 +1,8 @@
+fastapi==0.90.0
+tortoise-orm
+python-dotenv
+uvicorn
+jinja2
+#slowapi
+python-multipart
+aiofiles

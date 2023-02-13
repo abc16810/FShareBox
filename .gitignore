@@ -1,0 +1,13 @@
+*.py[cod]
+.idea
+.vscode
+test.py
+.DS_Store
+.env
+# C extensions
+*.so
+__pycache__
+*.log
+test
+data/*
+*.db*
