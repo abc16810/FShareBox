@@ -44,7 +44,7 @@ class Codes(Model):
     key = fields.CharField(max_length=32, unique=True)
     name = fields.CharField(max_length=500, description="分享类型名称")
     size = fields.IntField()
-    type = fields.CharField(max_length=20, description="类型")
+    type = fields.CharField(max_length=200, description="类型")
     text = fields.TextField()
     used = fields.BooleanField(default=False)
     count = fields.IntField(default=-1, description="有效次数")
