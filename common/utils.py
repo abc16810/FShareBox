@@ -1,5 +1,6 @@
 import hashlib
 import random
+import string
 import time
 from functools import lru_cache
 
@@ -23,10 +24,12 @@ def get_ipaddr(request: Request) -> str:
 
 
 async def get_codes(code: Codes) -> str:
-    code = random.randint(10000, 99999)
+    str_code = random.sample(string.ascii_letters + string.digits, 5)
+    code = ''.join(str_code)
     while (await Codes.filter(code=code)):
-        code = random.randint(10000, 99999)
-    return str(code)
+        str_code = random.sample(string.ascii_letters + string.digits, 5)
+        code = ''.join(str_code)
+    return code
 
 
 async def get_token(ip, code):
