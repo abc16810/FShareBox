@@ -6,10 +6,10 @@ from pydantic import AnyUrl, BaseModel, BaseSettings, RedisDsn, SecretStr
 
 class AppSettings(BaseSettings):
     author: str = "wsm"
-    title: str = "AShareBox"
+    title: str = "FShareBox - 共享快递箱"
     version: str = "1.0"
-    description: str = "AShareBox，文件快递柜，口令传送箱，匿名口令分享文本，文件，图片"
-    keywords: str = "AShareBox，文件快递柜，口令传送箱，匿名口令分享文本，文件，图片"
+    description: str = "FShareBox，共享文件快递柜，口令传送箱，匿名口令分享文本，文件，图片"
+    keywords: str = "FShareBox，共享文件快递柜，口令传送箱，匿名口令分享文本，文件，图片"
 
     debug: bool = True
 
@@ -65,7 +65,6 @@ class AppSettings(BaseSettings):
             "version": self.version,
             "description": self.description,
         }
-        print(self.debug)
         if not self.debug:
             self.openapi_url, self.docs_url, self.redoc_url = None, None, None
             kwargs["openapi_url"] = self.openapi_url
