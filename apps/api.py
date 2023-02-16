@@ -16,13 +16,6 @@ from common.utils import (admin_required, app_settings, error_ip_limit,
 router = APIRouter()
 
 
-@router.get("/info")
-async def info(request: Request):
-    return {
-        "name": "11",
-        "author": "22"
-    }
-
 
 @router.post(
     "/",
@@ -52,6 +45,8 @@ async def get_code(request: Request, code: str, ret: tuple = Depends(error_ip_li
 
     if query.type != 'text':
         query.text = f'/api/select?code={query.code}&token={await get_token(code, ip)}'
+    query.text = query.text.replace("\r\n", "</br>")
+    print(repr(query.text))
     return {
         'detail': f'取件成功，请立即下载，避免失效！',
         'data': {'type': query.type, 'text': query.text, 'name': query.name, 'code': query.code}
@@ -117,6 +112,12 @@ class UploadFormParam:
             raise HTTPException(status_code=400, detail="最小有效次数为1次")
         if not self.file and not self.text:
             raise HTTPException(status_code=400, detail="文本不能为空")
+        if not self.text and self.file:
+            if not self.file.filename:
+                raise HTTPException(status_code=400, detail="文件为空")
+        if self.file.filename == "":
+            self.file = None
+
 
 
 @router.post(
@@ -148,8 +149,8 @@ async def share(request: Request, params=Depends(UploadFormParam), ret: tuple = 
     key = uuid.uuid4().hex
     if params.file:
         size = await storages.get_size(params.file)
-        if size > set.upload_file_size:
-            raise HTTPException(status_code=400, detail="文件过大")
+        if size > set.upload_file_size or size < 1:
+            raise HTTPException(status_code=400, detail="文件过大或者文件不能为空")
         _text, _type, name = await storages.get_text(params.file, key), params.file.content_type, params.file.filename
         params.background_tasks.add_task(
             storages.save_file, params.file, _text)
