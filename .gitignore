@@ -11,3 +11,4 @@ __pycache__
 test
 data/*
 *.db*
+logs.ini
