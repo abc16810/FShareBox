@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>后台登陆 - {{ title }}</title>
+  <meta name="description" content="{{ des }}" />
+  <meta name="keywords" content="{{keywords}}" />
+  <meta name="generator" content="FShareBox" />
+  <link href="/static/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" />
+  <script src="/static/jquery/jquery.min.js"></script>
+  <script src="/static/js/bootstrap.bundle.min.js"></script>
+  <style>
+    .login {
+      background-color: #e9ecef;
+    }
+
+    .login .login-name {
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .login-logo {
+      font-size: 35px;
+      font-weight: 300;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .login-logo a {
+      color: #495057;
+    }
+
+    .login-wrapper {
+      margin: 0 auto;
+      margin-top: 10%;
+      max-width: 400px;
+    }
+
+    .login-item {
+      border-radius: 4px;
+      background-color: #fff;
+      margin: 10px auto 30px;
+      padding: 0;
+      position: relative;
+      width: 290px;
+    }
+
+    .login-image {
+      border-radius: 50%;
+      background-color: #fff;
+      left: -10px;
+      padding: 5px;
+      position: absolute;
+      top: -25px;
+      z-index: 10;
+    }
+
+    .login-image>img {
+      border-radius: 50%;
+      height: 70px;
+      width: 70px;
+    }
+
+    .login-credentials {
+      margin-left: 70px;
+    }
+
+    .login-credentials .form-control {
+      border: 0;
+    }
+
+    .login-credentials .btn {
+      background-color: #fff;
+      border: 0;
+    }
+  </style>
+</head>
+
+<body class="hold-transition login">
+
+  <!-- Flexbox container for aligning the toasts -->
+  <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
+    <!-- Then put toasts within -->
+    <div class="toast text-bg-warning border-0" role="alert" aria-live="assertive" aria-atomic="true" id="ErrorToast"
+      data-bs-delay="500000">
+      <div class="d-flex">
+        <div class="toast-body" id="ErrorMess"></div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+          aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="login-wrapper">
+    <!-- <div class="login-logo">
+      <a href="#"><b>后台管理</b></a>
+    </div> -->
+    <div class="login-name">请输入密码</div>
+    <div class="login-item">
+      <div class="login-image">
+        <img src="/static/img/login.png" alt="User Image">
+      </div>
+      <!-- /.lockscreen-image -->
+      <!-- lockscreen credentials (contains the form) -->
+      <form class="login-credentials" id="login" method="post" novalidate>
+        <div class="input-group">
+          <input type="password" class="form-control" placeholder="password" name="password" id="password" required />
+          <button type="button" class="btn btn-info py-0" id="submit">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-arrow-right-short" viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z">
+              </path>
+            </svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+</body>
+<script type="text/javascript">
+  function ShowToast(info, e, k) {
+    document.getElementById(e).innerHTML = info || 'error'
+    new bootstrap.Toast(document.getElementById(k)).show()
+  }
+  $(function () {
+    $('#submit').on('click', function () {
+      var textinput = document.querySelector('#password').value;
+      if (textinput == "") {
+        document.querySelector('.login-credentials').classList.add('was-validated')
+      } else {
+        var form = new FormData(document.getElementById("login"));
+        $.ajax({
+          type: "post",
+          url: window.location.href,
+          data: form,
+          processData: false,
+          contentType: false,
+          success: function (data) {
+            window.location.href = data.detail;
+          },
+          error: function (data) {
+            console.log(window.location.href);
+            if (data.responseJSON == undefined) {
+              ShowToast('system error', 'ErrorMess', 'ErrorToast')
+            } else {
+              var info = data.responseJSON.detail;
+              ShowToast(info, 'ErrorMess', 'ErrorToast')
+            }
+          }
+        });
+      }
+    })
+  })
+</script>
+
+</html>

@@ -1,243 +1,273 @@
 <html lang="en">
+
 <head>
-    <meta charset="utf-8"/>
-    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ title }}</title>
-    <meta name="description" content="{{ des }}"/>
-    <meta name="keywords" content="{{ keywords }}"/>
-    <meta name="generator" content="FShareBox"/>
-    <meta name="template" content="V1.0 Beta"/>
-    <link href="/static/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet"/>
-    <link href="/static/css/index.css" rel="stylesheet"/>
+    <meta name="description" content="{{ des }}" />
+    <meta name="keywords" content="{{ keywords }}" />
+    <meta name="generator" content="FShareBox" />
+    <meta name="template" content="V1.0 Beta" />
+    <link href="/static/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" />
+    <link href="/static/css/index.css" rel="stylesheet" />
     <script src="/static/jquery/jquery.min.js"></script>
     <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/index.js"></script>
 </head>
+
 <body>
-<div id="root" style="background: rgba(2,175,116,.1);">
-    <div aria-live="polite" aria-atomic="true" class="position-relative" >
-        <div class="toast-container top-0 end-0 p-3">
-            <div id="AlertliveToast" class="toast align-items-center text-bg-warning border-0"
-                 role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
-                <div class="d-flex">
-                    <div class="toast-body" id="alertinfo"></div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    <div id="root" style="background: rgba(2,175,116,.1);">
+        <div aria-live="polite" aria-atomic="true" class="position-relative">
+            <div class="toast-container top-0 end-0 p-3">
+                <div id="AlertliveToast" class="toast align-items-center text-bg-warning border-0" role="alert"
+                    aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                    <div class="d-flex">
+                        <div class="toast-body" id="alertinfo"></div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                            aria-label="Close"></button>
+                    </div>
+                </div>
+                <div id="SuccessliveToast" class="toast align-items-center text-bg-success border-0" role="status"
+                    aria-live="polite" aria-atomic="true" data-bs-delay="5000">
+                    <div class="d-flex">
+                        <div class="toast-body" id="sinfo"></div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                            aria-label="Close"></button>
+                    </div>
                 </div>
             </div>
-            <div id="SuccessliveToast" class="toast align-items-center text-bg-success border-0"
-                 role="status" aria-live="polite" aria-atomic="true" data-bs-delay="5000">
-                <div class="d-flex">
-                    <div class="toast-body" id="sinfo"></div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+
+        <div>
+            <div class="main-content">
+                <div class="page-content">
+                    <section class="bg-coming-soon bg-auth">
+                        <div class="container">
+                            <div class="justify-content-center row">
+                                <div class="col-lg-6">
+                                    <div class="text-center">
+                                        <div class="mb-4 pb-3">
+                                            <img src="/static/img/one.gif" alt="" height="150" class="mg-fluid">
+                                        </div>
+                                        <!-- <h2>请输入五位取件码</h2> -->
+                                        <!-- <p class="text-muted mb-2 pb-3 page-title">文件共享、文本共享</p> -->
+                                        <div class="d-flex ps-2 text-muted">
+                                            <span style="font-size: 20px;">请输入五位取件码</span>
+                                        </div>
+                                        <form class="position-relative me-lg-n15 mt-4 align-items-center" id="form">
+                                            <div class="row g-2 mx-0 align-items-end  mx-auto">
+                                                <div class="col-2" style="width: 10%;">
+                                                    <div class="position-relative input-group shadow-sm">
+                                                        <input type="text" maxlength=1 id="c1" name="c1"
+                                                            class="form-control form-control-lg g-px-8 g-py-15 text-center g-font-size-16">
+                                                    </div>
+                                                </div>
+                                                <div class="col-2" style="width: 10%;">
+                                                    <div class="position-relative input-group shadow-sm">
+                                                        <input type="text" maxlength=1 id="c2" name="c2"
+                                                            class="form-control form-control-lg g-px-8 g-py-15 text-center g-font-size-16">
+                                                    </div>
+                                                </div>
+                                                <div class="col-2" style="width: 10%;">
+                                                    <div class="position-relative input-group shadow-sm">
+                                                        <input type="text" maxlength=1 id="c3" name="c3"
+                                                            class="form-control form-control-lg g-px-8 g-py-15 text-center g-font-size-16">
+                                                    </div>
+                                                </div>
+                                                <div class="col-2" style="width: 10%;">
+                                                    <div class="position-relative input-group shadow-sm">
+                                                        <input type="text" maxlength=1 id="c4" name="c4"
+                                                            class="form-control form-control-lg g-px-8 g-py-15 text-center g-font-size-16">
+                                                    </div>
+                                                </div>
+                                                <div class="col-2" style="width: 10%;">
+                                                    <div class="position-relative input-group shadow-sm">
+                                                        <input type="text" maxlength=1 id="c5" name="c5"
+                                                            class="form-control form-control-lg g-px-8 g-py-15 text-center g-font-size-16">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <div class="mx-auto">
+                                                    <span class="d-sm-inline">
+                                                        <a href="#" class="btn btn-success" data-bs-toggle="modal"
+                                                            data-bs-target="#modal-upload">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                                height="16" fill="currentColor" class="bi bi-upload"
+                                                                viewBox="0 0 16 16">
+                                                                <path
+                                                                    d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                                                                <path
+                                                                    d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z" />
+                                                            </svg>
+                                                            上传
+                                                        </a>
+                                                    </span>
+                                                    <a href="#" class="btn btn-primary d-sm-inline-block"
+                                                        data-bs-toggle="modal" data-bs-target="#modal-get-files">
+                                                        <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                            fill="currentColor" class="bi bi-files" viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1zM3 4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4z">
+                                                            </path>
+                                                        </svg>
+                                                        我的文件
+                                                    </a>
+                                                    <a href="#" class="btn btn-outline-primary d-sm-inline-block"
+                                                        data-bs-toggle="modal" data-bs-target="#modal-receive-files">
+                                                        <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                            fill="currentColor" class="bi bi-files" viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1zM3 4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4z">
+                                                            </path>
+                                                        </svg>
+                                                        取件箱
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal modal-blur fade" id="modal-receive-files" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">收件箱</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="rece-files">
+                    <div id="rece-empty">
+                        <div class="fs-2 text-center mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-box2" viewBox="0 0 16 16">
+                                <path
+                                    d="M2.95.4a1 1 0 0 1 .8-.4h8.5a1 1 0 0 1 .8.4l2.85 3.8a.5.5 0 0 1 .1.3V15a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V4.5a.5.5 0 0 1 .1-.3L2.95.4ZM7.5 1H3.75L1.5 4h6V1Zm1 0v3h6l-2.25-3H8.5ZM15 5H1v10h14V5Z" />
+                            </svg>
+                        </div>
+                        <h2 class="fs-5 text-center" style="color: rgba(30,41,59,.7);">请输入取件码，收取文件</h2>
+                    </div>
+                    <div id="rece-list-items" class="d-none">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div>
-        <div class="main-content">
-            <div class="page-content">
-                <section class="bg-coming-soon bg-auth">
-                    <div class="container">
-                        <div class="justify-content-center row">
+    <div class="modal modal-blur fade" id="modal-get-files" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">我的文件箱</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="files">
+                    <div id="empty">
+                        <div class="fs-2 text-center mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-box2" viewBox="0 0 16 16">
+                                <path
+                                    d="M2.95.4a1 1 0 0 1 .8-.4h8.5a1 1 0 0 1 .8.4l2.85 3.8a.5.5 0 0 1 .1.3V15a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V4.5a.5.5 0 0 1 .1-.3L2.95.4ZM7.5 1H3.75L1.5 4h6V1Zm1 0v3h6l-2.25-3H8.5ZM15 5H1v10h14V5Z" />
+                            </svg>
+                        </div>
+                        <h2 class="fs-5 text-center" style="color: rgba(30,41,59,.7);">你还没有上传文件，单击上传按钮上传文件</h2>
+                    </div>
+                    <div id="list-items" class="d-none">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal modal-blur fade" id="modal-upload" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">上传</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="upload" class="needs-validation" role="form" method="post" enctype="multipart/form-data"
+                        novalidate>
+                        <div class="mb-3">
+                            <div class="row g-2">
+                                <div class="col-md-3 col-sm-auto col-smm-auto">
+                                    <select id="style" class="form-select" name="style" aria-label="Select">
+                                        <option value="1">次数</option>
+                                        <option value="2">天数</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 col-sm-auto col-smm-fix">
+                                    <input type="text" class="form-control" name="value" value="1">
+                                </div>
+                                <div class="col-md-2 col-sm-auto col-smm-auto">
+                                    <span class="input-group-text" id="basic">天</span>
+                                </div>
+                            </div>
+                        </div>
+                        <label class="form-label">文件/文本</label>
+                        <div class="form-selectgroup-boxes row mb-3">
                             <div class="col-lg-6">
-                                <div class="text-center">
-                                    <div class="mb-4 pb-3">
-                                        <img src="/static/img/one.gif" alt="" height="150" class="mg-fluid">
-                                    </div>
-                                    <!-- <h2>请输入五位取件码</h2> -->
-                                    <!-- <p class="text-muted mb-2 pb-3 page-title">文件共享、文本共享</p> -->
-                                    <div class="d-flex ps-2 text-muted">
-                                        <span style="font-size: 20px;">请输入五位取件码</span>
-                                    </div>
-                                    <form class="position-relative me-lg-n15 mt-4 align-items-center" id="form">
-                                        <div class="row g-2 mx-0 align-items-end  mx-auto">
-                                            <div class="col-2" style="width: 10%;">
-                                                <div class="position-relative input-group shadow-sm">
-                                                    <input type="text" maxlength=1 id="c1" name="c1" class="form-control form-control-lg g-px-8 g-py-15 text-center g-font-size-16">
-                                                </div>
-                                            </div>
-                                            <div class="col-2" style="width: 10%;">
-                                                <div class="position-relative input-group shadow-sm">
-                                                    <input type="text" maxlength=1 id="c2" name="c2" class="form-control form-control-lg g-px-8 g-py-15 text-center g-font-size-16">
-                                                </div>
-                                            </div>
-                                            <div class="col-2" style="width: 10%;">
-                                                <div class="position-relative input-group shadow-sm">
-                                                    <input type="text" maxlength=1 id="c3" name="c3" class="form-control form-control-lg g-px-8 g-py-15 text-center g-font-size-16">
-                                                </div>
-                                            </div>
-                                            <div class="col-2" style="width: 10%;">
-                                                <div class="position-relative input-group shadow-sm">
-                                                    <input type="text" maxlength=1 id="c4" name="c4" class="form-control form-control-lg g-px-8 g-py-15 text-center g-font-size-16">
-                                                </div>
-                                            </div>
-                                            <div class="col-2" style="width: 10%;">
-                                                <div class="position-relative input-group shadow-sm">
-                                                    <input type="text" maxlength=1 id="c5" name="c5" class="form-control form-control-lg g-px-8 g-py-15 text-center g-font-size-16">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <div class="row">
-                                        <div class="col-auto">
-                                            <div class="mx-auto">
-                                                          <span class="d-sm-inline">
-                                                            <a href="#" class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#modal-upload">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
-                                                                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                                                    <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
-                                                                  </svg>
-                                                              上传
-                                                            </a>
-                                                          </span>
-                                                <a href="#" class="btn btn-primary d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-get-files">
-                                                    <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-files" viewBox="0 0 16 16">
-                                                        <path d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1zM3 4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4z"></path>
-                                                    </svg>
-                                                    我的文件
-                                                </a>
-                                                <a href="#" class="btn btn-outline-primary d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-receive-files">
-                                                    <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-files" viewBox="0 0 16 16">
-                                                        <path d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1zM3 4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4z"></path>
-                                                    </svg>
-                                                    取件箱
-                                                </a>
-                                            </div>
-                                        </div>
+                                <label class="form-selectgroup-item">
+                                    <input type="radio" name="r-type" value="1" class="form-selectgroup-input" checked>
+                                    <span class="form-selectgroup-label d-flex align-items-center p-3">
+                                        <span class="me-3">
+                                            <span class="form-selectgroup-check"></span>
+                                        </span>
+                                        <span class="form-selectgroup-label-content">
+                                            <span class="form-selectgroup-title strong mb-1">文件</span>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="form-selectgroup-item">
+                                    <input type="radio" name="r-type" value="2" class="form-selectgroup-input">
+                                    <span class="form-selectgroup-label d-flex align-items-center p-3">
+                                        <span class="me-3">
+                                            <span class="form-selectgroup-check"></span>
+                                        </span>
+                                        <span class="form-selectgroup-label-content">
+                                            <span class="form-selectgroup-title strong mb-1">文本</span>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div id="post-text" hidden>
+                                    <textarea id="text" name="text" class="form-control" rows="3"
+                                        data-bs-toggle="autosize" placeholder="请输入文本内容…"></textarea>
+                                </div>
+                                <div id="post-file">
+                                    <input type="file" id="file" name="file" class="form-control" />
+                                    <div id="file" class="invalid-feedback">
+                                        请选择文件.
                                     </div>
                                 </div>
                             </div>
                         </div>
-                </section>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal modal-blur fade" id="modal-receive-files" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">收件箱</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="rece-files">
-                <div id="rece-empty">
-                    <div class="fs-2 text-center mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box2" viewBox="0 0 16 16">
-                            <path d="M2.95.4a1 1 0 0 1 .8-.4h8.5a1 1 0 0 1 .8.4l2.85 3.8a.5.5 0 0 1 .1.3V15a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V4.5a.5.5 0 0 1 .1-.3L2.95.4ZM7.5 1H3.75L1.5 4h6V1Zm1 0v3h6l-2.25-3H8.5ZM15 5H1v10h14V5Z"/>
-                        </svg>
-                    </div>
-                    <h2 class="fs-5 text-center" style="color: rgba(30,41,59,.7);">请输入取件码，收取文件</h2>
-                </div>
-                <div id="rece-list-items" class="d-none">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="modal modal-blur fade" id="modal-get-files" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">我的文件箱</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="files">
-                <div id="empty">
-                    <div class="fs-2 text-center mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box2" viewBox="0 0 16 16">
-                            <path d="M2.95.4a1 1 0 0 1 .8-.4h8.5a1 1 0 0 1 .8.4l2.85 3.8a.5.5 0 0 1 .1.3V15a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V4.5a.5.5 0 0 1 .1-.3L2.95.4ZM7.5 1H3.75L1.5 4h6V1Zm1 0v3h6l-2.25-3H8.5ZM15 5H1v10h14V5Z"/>
-                        </svg>
-                    </div>
-                    <h2 class="fs-5 text-center" style="color: rgba(30,41,59,.7);">你还没有上传文件，单击上传按钮上传文件</h2>
-                </div>
-                <div id="list-items" class="d-none">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal modal-blur fade" id="modal-upload" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">上传</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="upload" class="needs-validation" role="form" method="post" enctype="multipart/form-data" novalidate>
-                    <div class="mb-3">
-                        <div class="row g-2">
-                            <div class="col-md-3 col-sm-auto col-smm-auto">
-                                <select id="style" class="form-select" name="style" aria-label="Select">
-                                    <option value="1">次数</option>
-                                    <option value="2">天数</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2 col-sm-auto col-smm-fix">
-                                <input type="text" class="form-control" name="value"  value="1">
-                            </div>
-                            <div class="col-md-2 col-sm-auto col-smm-auto">
-                                <span class="input-group-text" id="basic">天</span>
-                            </div>
-                        </div>
-                    </div>
-                    <label class="form-label">文件/文本</label>
-                    <div class="form-selectgroup-boxes row mb-3">
-                        <div class="col-lg-6">
-                            <label class="form-selectgroup-item">
-                                <input type="radio" name="r-type" value="1" class="form-selectgroup-input" checked>
-                                <span class="form-selectgroup-label d-flex align-items-center p-3">
-                        <span class="me-3">
-                            <span class="form-selectgroup-check"></span>
-                        </span>
-                        <span class="form-selectgroup-label-content">
-                            <span class="form-selectgroup-title strong mb-1">文件</span>
-                        </span>
-                        </span>
-                            </label>
-                        </div>
-                        <div class="col-lg-6">
-                            <label class="form-selectgroup-item">
-                                <input type="radio" name="r-type" value="2" class="form-selectgroup-input">
-                                <span class="form-selectgroup-label d-flex align-items-center p-3">
-                        <span class="me-3">
-                            <span class="form-selectgroup-check"></span>
-                        </span>
-                        <span class="form-selectgroup-label-content">
-                            <span class="form-selectgroup-title strong mb-1">文本</span>
-                        </span>
-                        </span>
-                            </label>
-                        </div>
-                    </div>
+                    </form>
                     <div class="row">
-                        <div class="col-lg-12">
-                            <div id="post-text" hidden>
-                                <textarea id="text" name="text" class="form-control" rows="3" data-bs-toggle="autosize" placeholder="请输入文本内容…" required></textarea>
-                            </div>
-                            <div id="post-file">
-                                <input type="file" id="file" name="file" class="form-control" required />
-                                <div id="file" class="invalid-feedback">
-                                    请选择文件.
+                        <div class="card text-end border-0 mt-3">
+                            <div class="card-footer bg-white px-0 py-4 border-0">
+                                <div class="d-flex">
+                                    <button id="submit" class="btn btn-primary ms-auto">提交</button>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </form>
-                <div class="row">
-                    <div class="card text-end border-0 mt-3">
-                        <div class="card-footer bg-white px-0 py-4 border-0">
-                            <div class="d-flex">
-                                <button id="submit" class="btn btn-primary ms-auto">提交</button>
                             </div>
                         </div>
                     </div>
@@ -245,156 +275,15 @@
             </div>
         </div>
     </div>
-</div>
 
 </body>
 <script type="text/javascript">
-    $("input[name^='c']").val("")
-    $(function(){
-        var elem = $("#form");
-        var inputs = elem.find("input");
-        var len = inputs.length;
-        inputs.each(function(index, item){
-            var $item = $(item);
-            $item.on('focus', function(){
-                if ($(this).val() != ''){
-                    $(this).select();
-                }
-                elem.addClass('focus');
-                $(this).addClass('focus');
-            });
-            $item.on('blur', function(){
-                $(this).removeClass('focus');
-                elem.removeAttr('focus');
-            });
-            $item.on("keyup", function(e){
-                var thisinput = $(this);
-                var v = $(this).val();
-                // 输入↓或→键自动跳到下一个输入框内
-                if( (e.keyCode == 39 || e.keyCode == 40) && index<len-1){
-                    inputs.eq(index+1).focus();
-                }
-                // 输入↓或→键自动跳到上一个输入框内
-                else if( (e.keyCode == 38 || e.keyCode == 37) && index!=0){
-                    inputs.eq(index-1).focus();
-                } // 输入3个字符自动跳到下一个输入框内
-                else if(v.length == 1 && index<len-1){
-                    inputs.eq(index+1).focus();
-                }
-                // 删除的时候，一个输入框没有了字符，自动跳回上一个输入框
-                else if (v == "" && e.keyCode == 8 && index !=0 ){
-                    inputs.eq(index-1).focus();
-                }
-            })
-        })
-        $("input[name^='c']").bind('keyup',function() {
-            var info = $("#c1").val() + $("#c2").val() + $("#c3").val() + $("#c4").val() + $("#c5").val();
-            if (info.length == 5) {
-                device_verify(info);
 
-            }
-        });
-        //监听modal事件
-        const myModalEl = document.getElementById('modal-upload')
-        myModalEl.addEventListener('hidden.bs.modal', event => {
-            $('#upload')[0].reset();
-    })
-        myModalEl.addEventListener('shown.bs.modal', event => {
-            var value = document.querySelector("input[type='radio']:checked").value;
-        if (value == "1"){
-            $("#post-text").attr("hidden", "hidden");
-            $("#post-file").removeAttr("hidden");
-        }
-    })
-        // var myform = document.querySelector('.needs-validation');
-        // myform.addEventListener('submit', event => {
-        //     if (!myform.checkValidity()) {
-        //         event.preventDefault()
-        //         event.stopPropagation()
-        //     }
-        //     myform.classList.add('was-validated')
-        //     }, false)
-    });
-    function get_files(e, data){
-        var code = data.code;
-        var img_html = qrcodeUrl(code);
-        html = '<div class="card py-3">\n' +
-            '    <div class="row row-0">\n' +
-            '        <div class="col">\n' +
-            '            <div class="card-body">\n' +
-            '                取件码: <b class="g-font-size-16">'+  data.code  +'</b>\n' +
-            '                <div class="text-muted">文件名: '+ data.name +'</div>\n' +
-            '            </div>\n' +
-            '        </div>\n' +
-            '        <div class="col-auto col-md-3">\n' +
-            '            <img src="'+ img_html +'" class="rounded-start" alt="二维码" width="80" height="80">\n' +
-            '        </div>\n' +
-            '  </div>\n' +
-            '</div>'
-        var f = document.getElementById(e);
-        f.innerHTML += html
-
-    };
-
-    function get_rece_files(e, data){
-        var code = data.code;
-        if (data.type == "text"){
-            var link =  '<div class="card border-0">\n' +
-                '  <div class="card-body">\n' + '<code>' +
-                '    <p>'+ data.text +'</p>\n' + '</code>' +
-                '  </div>\n' +
-                '</div>'
-        } else {
-            var link = '<p>链 接: <a href="'+ data.text +'"  target="_blank" type="primary">下载</a></p>'
-        }
-        html =  '<div class="row">\n' +
-            '  <div class="col">\n' +
-            '    <div class="text-truncate">\n' +
-            '      取件码: <strong>'+ code +'</strong>\n' +
-            '    </div>\n' +
-            '    <div class="text-muted">文件名: <strong>'+ data.name +'</strong></div>\n' + link
-        '    <h2 class="fs-5">Popover in a modal</h2>' +
-        '  </div>\n' +
-        '</div>'
-        var f = document.getElementById(e);
-        f.innerHTML += html
-        const myModal = new bootstrap.Modal('#modal-receive-files')
-        myModal.show(document.getElementById("modal-receive-files"))
-        
-
-    };
-    function qrcodeUrl(code) {
-        return 'https://api.qrserver.com/v1/create-qr-code/?data=' + window.location.href + '?code=' + code
-    };
-    function device_verify(e){
-        $("input[name^='c']").prop('disabled', true);
-        var url = "/api/?code=" + e
-        $.ajax({
-            type: "post",
-            url: url,
-            data: {},
-            complete: function (data) {
-                $("input[name^='c']").val("");
-                $("input[name^='c']").prop('disabled', false);
-                $("#c1").focus();
-            },
-            success: function (data) {
-                ShowSToast(data.detail);
-                $("#rece-empty").addClass("d-none");
-                $("#rece-list-items").removeClass("d-none");
-                get_rece_files("rece-list-items", data.data)
-            },
-            error: function (data) {
-                var info = data.responseJSON.detail;
-                ShowAToast(info);
-            }
-        });
-    }
-    function ShowAToast(info){
+    function ShowAToast(info) {
         document.getElementById("alertinfo").innerHTML = info
         new bootstrap.Toast(document.getElementById('AlertliveToast')).show()
     }
-    function ShowSToast(info){
+    function ShowSToast(info) {
         document.getElementById("sinfo").innerHTML = info
         new bootstrap.Toast(document.getElementById('SuccessliveToast')).show()
         // const myToastEl = document.getElementById('liveToast')
@@ -404,38 +293,39 @@
     }
 </script>
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
+        $("input[name^='c']").val("")
         $("#c1").focus();
         $('#upload')[0].reset();
-        $("input[type='radio']").change(function (){
-            if (this.value == "1"){
+        $("input[type='radio']").change(function () {
+            if (this.value == "1") {
                 //$("#text").attr("disabled", "disabled");
                 $("#post-text").attr("hidden", "hidden");
                 $("#post-file").removeAttr("hidden");
                 document.querySelector('#text').value = ""
-            } else{
+            } else {
                 $("#post-file").attr("hidden", "hidden");
                 $("#post-text").removeAttr("hidden");
                 document.querySelector('#file').value = ""
             }
         });
-        $("#style").change(function(){
+        $("#style").change(function () {
             var value = $("#style").val();
             var info = document.getElementById("basic");
-            if(value == "1"){
+            if (value == "1") {
                 info.innerText = "次"
-            }else{
+            } else {
                 info.innerText = "天"
             }
         });
-        $('#submit').on('click', function() {
+        $('#submit').on('click', function () {
             var fileinput = document.querySelector('#file').value;
             var textinput = document.querySelector('#text').value;
             var t = document.querySelector("input[type='radio']:checked").value;
-            if (t == "2" && textinput == "" ){
+            if (t == "2" && textinput == "") {
                 document.querySelector('.needs-validation').classList.add('was-validated')
             }
-            else if (t == "1" && fileinput == ""){
+            else if (t == "1" && fileinput == "") {
                 document.querySelector('.needs-validation').classList.add('was-validated')
             }
             else {
@@ -444,21 +334,25 @@
                     type: 'post',
                     url: '/api/share',
                     data: form,
-                    processData:false,
-                    contentType:false,
+                    processData: false,
+                    contentType: false,
                     complete: function (data) {
                         $('#modal-upload').modal('hide');
                     },
                     success: function (data) {
-                        ShowSToast(data.detail);
+                        ShowToast(data.detail, 'sinfo', 'SuccessliveToast');
                         $("#empty").addClass("d-none");
                         $("#list-items").removeClass("d-none");
-                        get_files("list-items", data.data)
+                        get_upload_files("list-items", data.data)
 
                     },
                     error: function (data) {
-                        var info = data.responseJSON.detail;
-                        ShowAToast(info);
+                        if (data.responseJSON == undefined) {
+                            ShowToast('system error', 'alertinfo', 'AlertliveToast')
+                        } else {
+                            var info = data.responseJSON.detail;
+                            ShowToast(info, 'alertinfo', 'AlertliveToast')
+                        }
                     }
                 })
 
@@ -466,4 +360,5 @@
         })
     })
 </script>
+
 </html>
