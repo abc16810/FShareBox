@@ -20,6 +20,7 @@ class Settings(Model):
     id = fields.IntField(pk=True)
     enable_upload = fields.BooleanField(description="是否开启上传", default=True)
     max_days = fields.SmallIntField(description="最长保存天数", default=7)
+    max_times = fields.SmallIntField(description="最大下载次数", default=10)
     error_count = fields.SmallIntField(description="失败次数", default=5)
     error_minute = fields.SmallIntField(description="错误限制分钟数", default=10)
     upload_count = fields.SmallIntField(description="上传次数", default=60)
@@ -57,20 +58,32 @@ class Codes(Model):
 
     def get_texts(self) -> str:
         if self.type == "text":
+            if len(self.text) > 20:
+                return self.text[:20] + "..."
             return self.text
         else:
             return f'/api/select?code={self.code}'
 
+    def get_type(self) -> str:
+        if self.type == "text":
+            return '文本'
+        else:
+            return '文件'
+
+    def get_short_text(self) -> str:
+        if self.type == "text":
+            return self.text[:1024]
+        return '11'
+
     class PydanticMeta:
-        computed = ["get_texts"]
+        computed = ["get_texts", "get_type", "get_short_text"]
 
 
 Codes_Pydantic = pydantic_model_creator(
-    Codes, name="Codes", include=("id", "code", "name", "exp_time", "count"), computed=['get_texts'])
+    Codes, name="Codes", include=("id", "code", "name", "exp_time", "count", "size"), computed=['get_texts', "get_type", "get_short_text"])
 
 
 class Code_Detail(BaseModel):
     detail: str
     data: List
     paginate: Dict['str', int]
-

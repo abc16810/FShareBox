@@ -10,10 +10,11 @@ class IPRateLimit:
         self.ips = {}
         self.is_error = is_error
 
-    async def get_settings(self):
-        if not await Settings.exists():
-            raise HTTPException(detail="System Error", status_code=500)
-        self.set = await Set_Pydantic.from_queryset_single(Settings.first())
+    async def get_settings(self, request):
+        # if not await Settings.exists():
+        #     raise HTTPException(detail="System Error", status_code=500)
+        # self.set = await Set_Pydantic.from_queryset_single(Settings.first())
+        self.set = request.app.state.settings
         if self.is_error:
             self.count = self.set.error_count
             self.minutes = self.set.error_minute
@@ -45,7 +46,7 @@ class IPRateLimit:
                 self.ips.pop(ip)
 
     async def __call__(self, request: Request):
-        await self.get_settings()
+        await self.get_settings(request)
         ip = request.headers.get(
             'X-Real-IP', request.headers.get('X-Forwarded-For', request.client.host))
         if not self.check_ip(ip):

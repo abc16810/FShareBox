@@ -25,6 +25,7 @@ class AppSettings(BaseSettings):
     api_prefix: str = "/api"
     api_manager_prefix: str = "/admin"
     api_manager_password: str = "admin@123"
+    api_manager_password_expire_minute = 30  # 过期时间
 
     #  Sqlite数据库文件
     db_file = "db/database.db"

@@ -6,3 +6,4 @@ jinja2
 #slowapi
 python-multipart
 aiofiles
+python-jose
