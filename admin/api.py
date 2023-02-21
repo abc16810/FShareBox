@@ -1,44 +1,19 @@
-from fastapi import Security
-from fastapi.security.api_key import APIKeyCookie
-from datetime import timedelta
-from dataclasses import dataclass
-import time
 import math
-from typing import List, Union
-from jose import JWTError, jwt
-from pydantic import BaseModel
-from fastapi import (APIRouter, Depends, Form, HTTPException, Query, Request,
-                     Response)
+from dataclasses import dataclass
+
+from fastapi import (APIRouter, Body, Depends, Form, HTTPException, Query,
+                     Request, Response)
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from apps.models import Detail
-from apps.models import Code_Detail, Codes, Codes_Pydantic, Settings
-from common.utils import admin_required, get_app_settings
-from settings import AppSettings
+
+from apps.models import Codes, Codes_Pydantic, Detail, Settings
+from common.utils import app_settings, get_app_settings
+
+from .lib import (admin_checked, api_key_cookie, authenticate_passwd,
+                  create_access_token, decode_token, paginator_num)
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
-# openssl rand -hex 32
-SECRET_KEY = "343ca65e419bddd55794cba36fe39cc18fb7c7fb9f44ec825e7dd644f4be46ab"
-ALGORITHM = "HS256"
-
-api_key_cookie = APIKeyCookie(name='token', auto_error=False)
-
-
-class Passwd(BaseModel):
-    password: str
-
-
-async def decode_token(token: str, set: AppSettings) -> bool:
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        passwd: str = payload.get("token")
-        print(passwd)
-        if not passwd.strip() and passwd != set.api_manager_password:
-            raise HTTPException(status_code=401, detail="密码错误，请重新登录")
-        return True
-    except JWTError:
-        return False
 
 
 @dataclass
@@ -46,6 +21,9 @@ class TokenParam:
     token: str = Depends(api_key_cookie)
 
     def __post_init__(self):
+        if not app_settings.api_manager_password:
+            raise HTTPException(
+                status_code=403, detail='您未设置管理员密码，无法使用此功能，请更新配置文件后，重启系统')
         token = self.token
         if token:
             self.token = token.strip()
@@ -56,7 +34,7 @@ class TokenParam:
     response_class=HTMLResponse,
     summary="后台登陆"
 )
-async def index(request: Request, set=Depends(get_app_settings), params=Depends(TokenParam)):
+async def login_index(request: Request, set=Depends(get_app_settings), params=Depends(TokenParam)):
     token = params.token
     if token and await decode_token(token, set):
         # 如果登录跳转到首页
@@ -73,22 +51,6 @@ async def index(request: Request, set=Depends(get_app_settings), params=Depends(
     )
 
 
-def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None):
-    to_encode = data.copy()
-    if expires_delta:
-        expire = time.time() + expires_delta
-    else:
-        expire = time.time() + 15 * 60
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
-
-
-def authenticate_passwd(set, password: str) -> bool:
-    if set.api_manager_password != password:
-        return False
-    return True
-
 
 @dataclass
 class LoginFormParam:
@@ -102,18 +64,24 @@ class LoginFormParam:
         self.password = str(value)
 
 
-@router.post("/login",
-             response_model=Detail,
-             responses={
-                 '400': {"model": Detail, "description": "Authentication failed"}
+@router.post(
+    "/login",
+    response_class=RedirectResponse,
+    responses={
+                '400': {"model": Detail, "description": "Authentication failed"}
              }
-             )
+)
 async def login(
     request: Request,
     response: Response,
     set=Depends(get_app_settings),
+    params=Depends(TokenParam),
     form: LoginFormParam = Depends(LoginFormParam),
 ):
+    token = params.token
+    if token and await decode_token(token, set):
+        # 如果登录跳转到首页
+        return RedirectResponse("%s" % set.api_manager_prefix)
     check = authenticate_passwd(set, form.password)
     if not check:
         raise HTTPException(
@@ -121,12 +89,13 @@ async def login(
             detail="Incorrect password"
         )
     data = {"token": form.password}
-    access_token_expires = 20000
-
+    access_token_expires = set.api_manager_password_expire_minute
+    
     access_token = create_access_token(
-        data=data, expires_delta=access_token_expires)
+        data=data, exp_minutes=access_token_expires)
+    response = RedirectResponse(url='/admin', status_code=303)
     response.set_cookie(key="token", value=access_token)
-    return {"detail": "/admin"}
+    return response
 
 
 @dataclass
@@ -135,47 +104,20 @@ class AdminFormParam:
     page: int = Query(default=1, description="当前页数")
     size: int = Query(default=10, description="每页显示条数")
 
-    def __post_init__(self):
-        pass
-
-
-async def paginator_num(total_page: int, current_page: int) -> list:
-    DOT = '.'
-    ON_EACH_SIDE = 2
-    ON_ENDS = 2
-    if total_page <= 10:
-        page_range = range(1, total_page + 1)
-    else:
-        page_range = []
-        if current_page > (ON_EACH_SIDE + ON_ENDS + 1):
-            page_range.extend(range(1, ON_ENDS + 1))
-            page_range.append(DOT)
-            page_range.extend(
-                range(current_page - ON_EACH_SIDE, current_page + 1))
-        else:
-            page_range.extend(range(1, current_page + 1))
-        if current_page < (total_page - ON_EACH_SIDE - ON_ENDS):
-            page_range.extend(
-                range(current_page + 1, current_page + ON_EACH_SIDE + 1))
-            page_range.extend(DOT)
-            page_range.extend(range(total_page - ON_ENDS + 1, total_page + 1))
-        else:
-            page_range.extend(range(current_page + 1, total_page + 1))
-    return list(page_range)
-
 
 @router.get(
     "/",
     response_class=HTMLResponse,
+    dependencies=[Depends(admin_checked)],
     summary="后台管理首页"
 )
-async def index(request: Request, set=Depends(get_app_settings), params=Depends(TokenParam), info=Depends(AdminFormParam)):
-    token = params.token
-    if not token or not await decode_token(token, set):
-        print('222', token)
-        return RedirectResponse('/')
+async def index(
+    request: Request, 
+    info=Depends(AdminFormParam),
+    set=Depends(get_app_settings)
+    ):
+
     total = await Codes.all().count()
-    print(info.page, info.size)
     data = await Codes_Pydantic.from_queryset(Codes.all().offset((info.page - 1) * info.size).limit(info.size))
     page_range = await paginator_num(math.ceil(total/info.size), info.page)
     return templates.TemplateResponse(
@@ -186,23 +128,82 @@ async def index(request: Request, set=Depends(get_app_settings), params=Depends(
             'page': info.page,
             'size': info.size,
             'total': total,
-            'page_range': page_range
+            'page_range': page_range,
+            'prefix': set.api_manager_prefix
         },
         media_type="text/html")
 
 
-@router.get(
-    '/config',
-    description='获取系统配置',
-    dependencies=[Depends(admin_required)]
-)
-async def config():
-    # 查询数据库
-    data = {}
 
-    return {'detail': '获取成功', 'data': {"id": 1, "key": "22"}, 'menus': [
-        {'key': 'INSTALL', 'name': '版本信息'},
-        {'key': 'WEBSITE', 'name': '网站设置'},
-        {'key': 'SHARE', 'name': '分享设置'},
-        {'key': 'BANNERS', 'name': 'Banner'},
-    ]}
+@router.get(
+    "/config",
+    response_class=HTMLResponse,
+    dependencies=[Depends(admin_checked)],
+    description="获取系统配置"
+)
+async def config(
+    request: Request, 
+    set=Depends(get_app_settings)
+    ):
+    settings = await Settings.first()
+    return templates.TemplateResponse(
+        "config.html",
+        context={
+            "request": request,    
+            'prefix': set.api_manager_prefix,
+            'settings': settings
+        },
+        media_type="text/html")
+
+
+
+@dataclass
+class PutParams:
+    """Put parameters."""
+
+    enable_upload: bool = Body(
+        default=True
+    )
+    max_days: int = Body(
+        ge=1, lt=365, default=7
+    )
+    max_times: int = Body(
+        ge=1, lt=10000, default=10
+    )
+    error_count: int = Body(
+        ge=1, lt=100, default=5
+    )
+    error_minute: int = Body(
+        ge=1, lt=100, default=5
+    )
+    upload_count: int = Body(
+        ge=1, lt=100, default=5
+    )
+    upload_minute: int = Body(
+        ge=1, lt=100, default=5
+    )
+    upload_file_size: int = Body(
+      ...,  gt=1, le=10485760
+    )
+
+  
+@router.put(
+    "/config",
+    dependencies=[Depends(admin_checked)],
+    description="修改系统配置",
+    response_model=Detail,
+    responses={
+        200: {
+            "description": "Return the JSON item.",
+        }
+    }
+)
+async def config_put(
+    request: Request, 
+    item=Depends(PutParams)
+    ):
+    await Settings.all().update(**item.__dict__)
+    return {"detail": "更新成功"}
+
+
+
