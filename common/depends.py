@@ -11,10 +11,9 @@ class IPRateLimit:
         self.is_error = is_error
 
     async def get_settings(self, request):
-        # if not await Settings.exists():
-        #     raise HTTPException(detail="System Error", status_code=500)
-        # self.set = await Set_Pydantic.from_queryset_single(Settings.first())
-        self.set = request.app.state.settings
+        if not await Settings.exists():
+            raise HTTPException(detail="System Error", status_code=500)
+        self.set = await Set_Pydantic.from_queryset_single(Settings.first())
         if self.is_error:
             self.count = self.set.error_count
             self.minutes = self.set.error_minute

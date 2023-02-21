@@ -8,9 +8,10 @@ from fastapi import (APIRouter, BackgroundTasks, Depends, File, Form,
                      HTTPException, Request, UploadFile)
 from fastapi.responses import FileResponse, RedirectResponse
 
+from admin.lib import admin_required
 from apps.models import Codes, Detail, OkItem
-from common.utils import (admin_required, error_ip_limit,
-                          get_codes, get_token, storages, upload_ip_limit)
+from common.utils import (error_ip_limit, get_codes, get_token, storages,
+                          upload_ip_limit)
 
 router = APIRouter()
 
@@ -33,8 +34,9 @@ async def get_code(request: Request, code: str, ret: tuple = Depends(error_ip_li
     ip, set = ret
     if not query:
         error_count = set.error_count - error_ip_limit.add_ip(ip)
+        message = f'{error_count} 次后将被禁止 {set.error_minute} 分钟' if error_count else f'禁止 {set.error_minute} 分钟'
         raise HTTPException(
-            status_code=404, detail=f"取件码错误，{error_count}次后将被禁止{set.error_minute}分钟")
+            status_code=404, detail=f"取件码错误，{message}")
 
     if query.exp_time.replace(tzinfo=None) < datetime.datetime.now() or query.count == 0:
         raise HTTPException(status_code=404, detail="取件码已失效，请联系寄件人")
@@ -109,8 +111,9 @@ class UploadFormParam:
             raise HTTPException(status_code=400, detail="最小有效次数为1次")
         if not self.file.filename.strip():
             self.file = None
-        if not self.text.strip():
-            self.text = None
+        if not self.file:
+            if not self.text.strip():
+                self.text = None
         if not self.file and not self.text:
             raise HTTPException(status_code=400, detail="文本/文件不能为空")
 
@@ -128,7 +131,6 @@ class UploadFormParam:
 )
 async def share(request: Request, params=Depends(UploadFormParam), ret: tuple = Depends(upload_ip_limit)):
     """文件分享接口"""
-    print(request.app.state.settings)
     code = await get_codes(Codes)
     ip, set = ret
     exp_time = datetime.datetime.now() + datetime.timedelta(days=1)  # 24小时
@@ -139,6 +141,9 @@ async def share(request: Request, params=Depends(UploadFormParam), ret: tuple = 
                 status_code=400, detail=f"最大有效天数为{set.max_days}天")
         exp_time = datetime.datetime.now() + datetime.timedelta(days=params.value)
     elif params.style in StyleName.one:
+        if params.value > set.max_times:
+            raise HTTPException(
+                status_code=400, detail=f"最大有效次数为{set.max_times}次")
         exp_count = params.value
     else:
         pass
