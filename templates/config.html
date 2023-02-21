@@ -1,0 +1,233 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>后台管理 - FShareBox - config </title>
+    <meta name="generator" content="FShareBox" />
+    <meta name="template" content="V1.0 Beta" />
+    <link href="/static/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" />
+    <link href="/static/css/tabler.min.css" rel="stylesheet" />
+    <script src="/static/jquery/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+    <div class="page">
+        <header class="navbar navbar-expand-md navbar-light d-print-none">
+            <div class="container-xl">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu"
+                    aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
+                    <a href=".">
+                        <img src="./static/logo.svg" width="110" height="32" alt="FShareBox" class="navbar-brand-image">
+                    </a>
+                </h1>
+            </div>
+        </header>
+        <header class="navbar-expand-md">
+            <div class="collapse navbar-collapse" id="navbar-menu">
+                <div class="navbar navbar-light">
+                    <div class="container-xl">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ prefix }}">
+                                    <span
+                                        class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
+                                            <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+                                            <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">
+                                        分享文件管理
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{{ prefix }}/config">
+                                    <span
+                                        class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/checkbox -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M9 11l3 3l8 -8" />
+                                            <path
+                                                d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">
+                                        系统设置
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="./icons.html">
+                                    <span
+                                        class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/ghost -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path
+                                                d="M5 11a7 7 0 0 1 14 0v7a1.78 1.78 0 0 1 -3.1 1.4a1.65 1.65 0 0 0 -2.6 0a1.65 1.65 0 0 1 -2.6 0a1.65 1.65 0 0 0 -2.6 0a1.78 1.78 0 0 1 -3.1 -1.4v-7" />
+                                            <path d="M10 10l.01 0" />
+                                            <path d="M14 10l.01 0" />
+                                            <path d="M10 14a3.5 3.5 0 0 0 4 0" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title">
+                                        本地文件管理
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="page-wrapper">
+            <!-- Page header -->     
+            <div class="page-body">
+                <div aria-live="polite" aria-atomic="true" class="position-relative">
+                    <div class="toast-container top-0 end-0 p-3">
+                        <div id="AlertliveToast" class="toast align-items-center text-bg-warning border-0" role="alert"
+                            aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                            <div class="d-flex">
+                                <div class="toast-body" id="alertinfo"></div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                                    aria-label="Close"></button>
+                            </div>
+                        </div>
+                        <div id="SuccessliveToast" class="toast align-items-center text-bg-success border-0" role="status"
+                            aria-live="polite" aria-atomic="true" data-bs-delay="5000">
+                            <div class="d-flex">
+                                <div class="toast-body" id="sinfo"></div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                                    aria-label="Close"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-xl">
+                    <div class="row row-cards">
+                        <div class="col-10 offset-1">
+                                <!-- <div class="card-header">
+                                    <h4 class="card-title">Form elements</h4>
+                                </div> -->
+                                <form  class="card" role="form" id="change">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-xl-6 offset-3">
+                                            <div class="row">
+                                                <div class="col-md-6 col-xl-12">
+                                                    
+                                                    <div class="mb-3">
+                                                        <label class="form-check form-switch">
+                                                            <input class="form-check-input" type="checkbox" name="enable_upload"  id="enable_upload"
+                                                            {% if settings.enable_upload %} checked="" {% endif %}>
+                                                            <span class="form-check-label">是否开启上传</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label required">指定天数时-允许选择最大保存天数 <span class="card-subtitle fs-5">【默认7天】</span></label>
+                                                        <input type="text" class="form-control" name="max_days" id="max_days" value="{{ settings.max_days }}" maxlength="2" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label required">指定次数时-允许选择最大下载次数 <span class="card-subtitle fs-5">【默认10次】</span></label>
+                                                        <input type="text" class="form-control" name="max_times" id="max_times" value="{{ settings.max_times }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label required">连续请求失败次数 <span class="card-subtitle fs-5">【默认5次】</span></label>
+                                                        <input type="text" class="form-control" name="error_count" id="error_count" placeholder="..." value="{{ settings.error_count }}">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">请求错误限制分钟数 <span class="card-subtitle fs-5">【默认5分钟】</span></label>
+                                                        <input type="text" class="form-control" name="error_minute" id="error_minute" placeholder="..." value="{{ settings.error_minute }}">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label required">匿名上传次数 <span class="card-subtitle fs-5">【默认10次】</span></label>
+                                                        <input type="text" class="form-control" name="upload_count" id="upload_count" placeholder="..." value="{{ settings.upload_count }}">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label required">上传限制分钟数 <span class="card-subtitle fs-5">【默认5分钟】</span></label>
+                                                        <input type="text" class="form-control" name="upload_minute" id="upload_minute" placeholder="..." value="{{ settings.upload_minute }}">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                            <label class="form-label required">允许上传文件大小 Byte <span class="card-subtitle fs-5">【默认10M】</span></label>
+                                                            <input type="text" class="form-control" name="upload_file_size" id="upload_file_size" placeholder="..." value="{{ settings.upload_file_size }}">
+                                                    </div>
+                                                </div>
+                                            </div>   
+                                        </div>
+                                    </div>
+                                </div>  
+                            </form>
+                                <div class="card-footer text-end">
+                                    <div class="d-flex">
+                                        <button id="submit" class="btn btn-primary ms-auto">修改</button>
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+      $(function () {
+        function ShowToast(info, e, k) {
+            document.getElementById(e).innerHTML = info || 'error'
+            new bootstrap.Toast(document.getElementById(k)).show()
+        }
+        $('#submit').on('click', function () {
+                if ($('#enable_upload').is(':checked')){
+                    var b = 1
+                } else {
+                    var b = 0
+                }
+                var data = {
+                    "enable_upload": b,
+                    "max_days": $('#max_days').val(),
+                    "max_times": $('#max_times').val(),
+                    "error_count": $('#error_count').val(),
+                    "error_minute": $('#error_minute').val(),
+                    "upload_count": $('#upload_count').val(),
+                    "upload_minute": $('#upload_minute').val(),
+                    "upload_file_size": $('#upload_file_size').val(),
+                }
+                $.ajax({
+                    type: "put",
+                    url: window.location.href,
+                    data: JSON.stringify(data),
+                    dataType: 'json',
+                    contentType : 'application/json',
+                    success: function (data) {
+                        ShowToast(data.detail, 'sinfo', 'SuccessliveToast');
+                    },
+                    error: function (data) {
+                        if (data.responseJSON == undefined) {
+                        ShowToast('system error', 'alertinfo', 'AlertliveToast')
+                        } else {
+                        var info = data.responseJSON.detail;
+                        ShowToast(info, 'alertinfo', 'AlertliveToast')
+                        }
+                    }
+                });
+            })
+     });
+</script>
+</html>

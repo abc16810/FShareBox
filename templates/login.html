@@ -121,8 +121,6 @@
       </form>
     </div>
   </div>
-
-
 </body>
 <script type="text/javascript">
   function ShowToast(info, e, k) {
@@ -139,14 +137,8 @@
         $.ajax({
           type: "post",
           url: window.location.href,
-          data: form,
-          processData: false,
-          contentType: false,
-          success: function (data) {
-            window.location.href = data.detail;
-          },
+          data: {"password": textinput},
           error: function (data) {
-            console.log(window.location.href);
             if (data.responseJSON == undefined) {
               ShowToast('system error', 'ErrorMess', 'ErrorToast')
             } else {
