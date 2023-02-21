@@ -65,7 +65,6 @@ class FileSystemStorage:
     async def delete_file(self, text: str):
         filepath = await self.get_filepath(text)
         if filepath.exists():
-            print(filepath)
             # 在不同的线程中异步地运行函数 python3.9+
             # await asyncio.to_thread(os.remove, filepath)
             # await asyncio.to_thread(self.judge_delete_folder, filepath)

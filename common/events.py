@@ -17,7 +17,6 @@ async def init_db(app: FastAPI, settings: AppSettings) -> None:
     # 初始化数据
     if not await models.Settings.exists():
         await models.Settings.create()
-    app.state.settings = await models.Set_Pydantic.from_queryset_single(models.Settings.first())
 
 
 # type: ignore
