@@ -22,21 +22,24 @@ class Settings(Model):
     max_days = fields.SmallIntField(description="最长保存天数", default=7)
     max_times = fields.SmallIntField(description="最大下载次数", default=10)
     error_count = fields.SmallIntField(description="失败次数", default=5)
-    error_minute = fields.SmallIntField(description="错误限制分钟数", default=10)
-    upload_count = fields.SmallIntField(description="上传次数", default=60)
-    upload_minute = fields.SmallIntField(description="上传限制分钟数", default=1)
+    error_minute = fields.SmallIntField(description="错误限制分钟数", default=5)
+    upload_count = fields.SmallIntField(description="上传次数", default=10)
+    upload_minute = fields.SmallIntField(description="上传限制分钟数", default=5)
     upload_file_size = fields.IntField(
         description="上传文件大小 Byte", default=10485760)  # 10M 10*1024*1024
 
     created_at = fields.DatetimeField(auto_now_add=True)
     modified_at = fields.DatetimeField(auto_now=True)
 
+    
+    def __str__(self):
+        return self.id
     class Meta:
         table = "settings"
 
 
 Set_Pydantic = pydantic_model_creator(Settings, name="Settings")
-
+SetIn_Pydantic = pydantic_model_creator(Settings, name="SettingsIn", exclude=("id", ), exclude_readonly=True)
 
 class Codes(Model):
     """Code"""
@@ -55,6 +58,10 @@ class Codes(Model):
 
     class Meta:
         table = "codes"
+        ordering = ["-use_time"]
+
+    def __str__(self):
+        return self.code
 
     def get_texts(self) -> str:
         if self.type == "text":
