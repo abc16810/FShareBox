@@ -15,8 +15,26 @@
 - [x] 防止滥用：IP限制上传次数
 - [x] 口令分享：(数字+字符)随机口令，存取文件，自定义次数以及有效期
 - [x] 匿名分享：无需注册，无需登录
-- [x] ~~管理面板：查看所有文件，删除文件等~~
+- [x] 管理面板：查看所有上传列表，后台删除等
 - [x] 一键部署：docker一键部署
 - [x] 多种存储方式：~~腾讯存储桶~~、本地文件流
 - [x] 日志打印
 
+## 部署
+```
+docker build -t FShareBox:v1 .
+docker run --name FShareBox -v $PWD/data:/app/data FShareBox:v1
+```
+## 预览
+
+### 取件
+![index](./images/index.png)
+![index2](./images/index_2.png)
+![index3](./images/index3.png)
+### 上传
+![upload](./images/upload.png)
+![upload2](./images/upload2.png)
+
+### 后台管理
+![admin](./images/admin.png)
+![admin2](./images/admin2.png)

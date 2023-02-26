@@ -71,7 +71,7 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item d-none">
                                 <a class="nav-link" href="./icons.html">
                                     <span
                                         class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/ghost -->
@@ -97,7 +97,7 @@
             </div>
         </header>
         <div class="page-wrapper">
-            <!-- Page header -->     
+            <!-- Page header -->
             <div class="page-body">
                 <div aria-live="polite" aria-atomic="true" class="position-relative">
                     <div class="toast-container top-0 end-0 p-3">
@@ -105,16 +105,16 @@
                             aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
                             <div class="d-flex">
                                 <div class="toast-body" id="alertinfo"></div>
-                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                                    aria-label="Close"></button>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                    data-bs-dismiss="toast" aria-label="Close"></button>
                             </div>
                         </div>
-                        <div id="SuccessliveToast" class="toast align-items-center text-bg-success border-0" role="status"
-                            aria-live="polite" aria-atomic="true" data-bs-delay="5000">
+                        <div id="SuccessliveToast" class="toast align-items-center text-bg-success border-0"
+                            role="status" aria-live="polite" aria-atomic="true" data-bs-delay="5000">
                             <div class="d-flex">
                                 <div class="toast-body" id="sinfo"></div>
-                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                                    aria-label="Close"></button>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                    data-bs-dismiss="toast" aria-label="Close"></button>
                             </div>
                         </div>
                     </div>
@@ -122,63 +122,84 @@
                 <div class="container-xl">
                     <div class="row row-cards">
                         <div class="col-10 offset-1">
-                                <!-- <div class="card-header">
+                            <!-- <div class="card-header">
                                     <h4 class="card-title">Form elements</h4>
                                 </div> -->
-                                <form  class="card" role="form" id="change">
+                            <form class="card" role="form" id="change">
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-xl-6 offset-3">
                                             <div class="row">
                                                 <div class="col-md-6 col-xl-12">
-                                                    
+
                                                     <div class="mb-3">
                                                         <label class="form-check form-switch">
-                                                            <input class="form-check-input" type="checkbox" name="enable_upload"  id="enable_upload"
-                                                            {% if settings.enable_upload %} checked="" {% endif %}>
+                                                            <input class="form-check-input" type="checkbox"
+                                                                name="enable_upload" id="enable_upload" {% if
+                                                                settings.enable_upload %} checked="" {% endif %}>
                                                             <span class="form-check-label">是否开启上传</span>
                                                         </label>
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label class="form-label required">指定天数时-允许选择最大保存天数 <span class="card-subtitle fs-5">【默认7天】</span></label>
-                                                        <input type="text" class="form-control" name="max_days" id="max_days" value="{{ settings.max_days }}" maxlength="2" required>
+                                                        <label class="form-label required">指定天数时-允许选择最大保存天数 <span
+                                                                class="card-subtitle fs-5">【默认7天】</span></label>
+                                                        <input type="text" class="form-control" name="max_days"
+                                                            id="max_days" value="{{ settings.max_days }}" maxlength="2"
+                                                            required>
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label class="form-label required">指定次数时-允许选择最大下载次数 <span class="card-subtitle fs-5">【默认10次】</span></label>
-                                                        <input type="text" class="form-control" name="max_times" id="max_times" value="{{ settings.max_times }}" required>
+                                                        <label class="form-label required">指定次数时-允许选择最大下载次数 <span
+                                                                class="card-subtitle fs-5">【默认10次】</span></label>
+                                                        <input type="text" class="form-control" name="max_times"
+                                                            id="max_times" value="{{ settings.max_times }}" required>
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label class="form-label required">连续请求失败次数 <span class="card-subtitle fs-5">【默认5次】</span></label>
-                                                        <input type="text" class="form-control" name="error_count" id="error_count" placeholder="..." value="{{ settings.error_count }}">
+                                                        <label class="form-label required">连续请求失败次数 <span
+                                                                class="card-subtitle fs-5">【默认5次】</span></label>
+                                                        <input type="text" class="form-control" name="error_count"
+                                                            id="error_count" placeholder="..."
+                                                            value="{{ settings.error_count }}">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label class="form-label">请求错误限制分钟数 <span class="card-subtitle fs-5">【默认5分钟】</span></label>
-                                                        <input type="text" class="form-control" name="error_minute" id="error_minute" placeholder="..." value="{{ settings.error_minute }}">
+                                                        <label class="form-label">请求错误限制分钟数 <span
+                                                                class="card-subtitle fs-5">【默认5分钟】</span></label>
+                                                        <input type="text" class="form-control" name="error_minute"
+                                                            id="error_minute" placeholder="..."
+                                                            value="{{ settings.error_minute }}">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label class="form-label required">匿名上传次数 <span class="card-subtitle fs-5">【默认10次】</span></label>
-                                                        <input type="text" class="form-control" name="upload_count" id="upload_count" placeholder="..." value="{{ settings.upload_count }}">
+                                                        <label class="form-label required">匿名上传次数 <span
+                                                                class="card-subtitle fs-5">【默认10次】</span></label>
+                                                        <input type="text" class="form-control" name="upload_count"
+                                                            id="upload_count" placeholder="..."
+                                                            value="{{ settings.upload_count }}">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label class="form-label required">上传限制分钟数 <span class="card-subtitle fs-5">【默认5分钟】</span></label>
-                                                        <input type="text" class="form-control" name="upload_minute" id="upload_minute" placeholder="..." value="{{ settings.upload_minute }}">
+                                                        <label class="form-label required">上传限制分钟数 <span
+                                                                class="card-subtitle fs-5">【默认5分钟】</span></label>
+                                                        <input type="text" class="form-control" name="upload_minute"
+                                                            id="upload_minute" placeholder="..."
+                                                            value="{{ settings.upload_minute }}">
                                                     </div>
                                                     <div class="mb-3">
-                                                            <label class="form-label required">允许上传文件大小 Byte <span class="card-subtitle fs-5">【默认10M】</span></label>
-                                                            <input type="text" class="form-control" name="upload_file_size" id="upload_file_size" placeholder="..." value="{{ settings.upload_file_size }}">
+                                                        <label class="form-label required">允许上传文件大小 Byte <span
+                                                                class="card-subtitle fs-5">【默认10M】</span></label>
+                                                        <input type="text" class="form-control" name="upload_file_size"
+                                                            id="upload_file_size" placeholder="..."
+                                                            value="{{ settings.upload_file_size }}">
                                                     </div>
                                                 </div>
-                                            </div>   
+                                            </div>
                                         </div>
                                     </div>
-                                </div>  
-                            </form>
-                                <div class="card-footer text-end">
-                                    <div class="d-flex">
-                                        <button id="submit" class="btn btn-primary ms-auto">修改</button>
-                                    </div>
                                 </div>
-                            
+                            </form>
+                            <div class="card-footer text-end">
+                                <div class="d-flex">
+                                    <button id="submit" class="btn btn-primary ms-auto">修改</button>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -188,46 +209,47 @@
 </body>
 
 <script type="text/javascript">
-      $(function () {
+    $(function () {
         function ShowToast(info, e, k) {
             document.getElementById(e).innerHTML = info || 'error'
             new bootstrap.Toast(document.getElementById(k)).show()
         }
         $('#submit').on('click', function () {
-                if ($('#enable_upload').is(':checked')){
-                    var b = 1
-                } else {
-                    var b = 0
-                }
-                var data = {
-                    "enable_upload": b,
-                    "max_days": $('#max_days').val(),
-                    "max_times": $('#max_times').val(),
-                    "error_count": $('#error_count').val(),
-                    "error_minute": $('#error_minute').val(),
-                    "upload_count": $('#upload_count').val(),
-                    "upload_minute": $('#upload_minute').val(),
-                    "upload_file_size": $('#upload_file_size').val(),
-                }
-                $.ajax({
-                    type: "put",
-                    url: window.location.href,
-                    data: JSON.stringify(data),
-                    dataType: 'json',
-                    contentType : 'application/json',
-                    success: function (data) {
-                        ShowToast(data.detail, 'sinfo', 'SuccessliveToast');
-                    },
-                    error: function (data) {
-                        if (data.responseJSON == undefined) {
+            if ($('#enable_upload').is(':checked')) {
+                var b = 1
+            } else {
+                var b = 0
+            }
+            var data = {
+                "enable_upload": b,
+                "max_days": $('#max_days').val(),
+                "max_times": $('#max_times').val(),
+                "error_count": $('#error_count').val(),
+                "error_minute": $('#error_minute').val(),
+                "upload_count": $('#upload_count').val(),
+                "upload_minute": $('#upload_minute').val(),
+                "upload_file_size": $('#upload_file_size').val(),
+            }
+            $.ajax({
+                type: "put",
+                url: window.location.href,
+                data: JSON.stringify(data),
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (data) {
+                    ShowToast(data.detail, 'sinfo', 'SuccessliveToast');
+                },
+                error: function (data) {
+                    if (data.responseJSON == undefined) {
                         ShowToast('system error', 'alertinfo', 'AlertliveToast')
-                        } else {
+                    } else {
                         var info = data.responseJSON.detail;
                         ShowToast(info, 'alertinfo', 'AlertliveToast')
-                        }
                     }
-                });
-            })
-     });
+                }
+            });
+        })
+    });
 </script>
+
 </html>
