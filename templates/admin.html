@@ -12,9 +12,18 @@
     <meta name="generator" content="FShareBox" />
     <meta name="template" content="V1.0 Beta" />
     <link href="/static/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" />
+    <!-- <link href="https://cdn.datatables.net/v/bs5/dt-1.13.2/r-2.4.0/sb-1.4.0/sp-2.1.1/datatables.min.css" /> -->
+    <link href="https://cdn.datatables.net/v/bs5/dt-1.13.2/b-2.3.4/datatables.min.css" />
     <link href="/static/css/tabler.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+
     <script src="/static/jquery/jquery.min.js"></script>
     <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="https://cdn.datatables.net/v/bs5/dt-1.13.2/r-2.4.0/sb-1.4.0/sp-2.1.1/datatables.min.js"></script> -->
+
+
+    <script src="https://cdn.datatables.net/v/bs5/dt-1.13.2/b-2.3.4/datatables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 </head>
 
 <body>
@@ -73,8 +82,8 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="./icons.html">
+                            <li class="nav-item d-none">
+                                <a class="nav-link" href="#">
                                     <span
                                         class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/ghost -->
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
@@ -118,11 +127,11 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="table-responsive">
-                                    <table class="table card-table table-vcenter text-nowrap datatable">
+                                    <table class="table card-table table-vcenter text-nowrap table-responsive"
+                                        id="filelist" data-dt-search="#filesearch" data-dt-page-length="15">
                                         <thead>
                                             <tr>
                                                 <th class="w-1">ID.
-                                                    <!-- Download SVG icon from http://tabler-icons.io/i/chevron-up -->
                                                     <svg xmlns="http://www.w3.org/2000/svg"
                                                         class="icon icon-sm icon-thick" width="24" height="24"
                                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
@@ -137,69 +146,271 @@
                                                 <th>count</th>
                                                 <th>过期时间</th>
                                                 <th>链接/内容</th>
-                                                <th></th>
+                                                <th>动作</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for item in data %}
-                                            <tr>
-                                                <td><span class="text-muted">{{ item.id }}</span></td>
-                                                <td><b class="g-font-size-16">{{ item.code }}</b></td>
-                                                <td>
-                                                    <span class="flag flag-country-us">{{ item.name }}</span>
-                                                </td>
-                                                <td>
-                                                    {{ item.size }}
-                                                </td>
-                                                <td>
-                                                    {{ item.count }}
-                                                </td>
-                                                <td>
-                                                    {{ item.exp_time }}
-                                                </td>
-                                                <td>
-                                                    <a class="badge bg-success me-1 btn" data-bs-toggle="tooltip"
-                                                        data-bs-placement="right" title="{{ item.get_short_text }}">{{
-                                                        item.get_texts }}</a>
-                                                </td>
-                                                <td class="text-end">
-                                                    <button class="btn  align-text-top"
-                                                        data-bs-boundary="viewport">删除</button>
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
-
                                         </tbody>
                                     </table>
-                                </div>
-                                <div class="card-footer d-flex align-items-center">
-                                    <p class="m-0 text-muted">Showing <span>{{ page }}</span> to <span>{{ size }}</span>
-                                        of
-                                        <span>{{ total }}</span> entries
-                                    </p>
-                                    <ul class="pagination m-0 ms-auto">
-                                        {% for p in page_range %}
-                                        {% if p == "." %}
-                                        <li class="page-item"><a class="page-link" href="#">...</a></li>
-                                        {% else %}
-                                        <li class="page-item {% if p == page %} active {% endif %}"><a class="page-link"
-                                                href="?page={{ p }}&limit={{ size*p }}">{{ p }}</a></li>
-                                        {% endif %}
-                                        {% endfor %}
-                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
+            <div class="col-xs-12">
+                <div id="mytop" style="display: none">
+                    <div class="search"><input id="filesearch" type="text" class="form-control" placeholder="搜索...">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    {% for x in data %} {{ x.id }} {% endfor %}
 </body>
 <script type="text/javascript">
+    $(function () {
+        const language = {
+            "sProcessing": "处理中...",
+            "sLengthMenu": "显示 _MENU_ 项结果",
+            "sZeroRecords": "没有匹配结果",
+            "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+            "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+            "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+            "sInfoPostFix": "",
+            "sSearch": "搜索: ",
+            "sUrl": "",
+            "sEmptyTable": "表中数据为空",
+            "sLoadingRecords": "载入中...",
+            "sInfoThousands": ",",
+            "oPaginate": {
+                "sFirst": "首页",
+                "sPrevious": "上页",
+                "sNext": "下页",
+                "sLast": "末页"
+            },
+            "oAria": {
+                "sSortAscending": ": 以升序排列此列",
+                "sSortDescending": ": 以降序排列此列"
+            }
+        }
+        function InitDatatables(selector, columns, columnDefs, config) {
+            var _baseConfig = { paging: true };
+            config = config || {};
+            this.collection = selector && $(selector).length ? $(selector) : $();   /*  table#AccountTable */
+            if (!$(selector).length) return;
 
+            this.config = config && $.isPlainObject(config) ?
+                $.extend({}, _baseConfig, config) : _baseConfig;
+
+            this.config.itemSelector = selector;        /* {itemSelector: "#AccountTable" paging: true }*/
+            this.config.columnDefs = columnDefs;
+            this.config.columns = columns
+            return initDatatables();
+
+            function initDatatables() {
+                var $self = this;
+                config = $self.config;
+                $search = $self.collection.data('dt-search');
+                $entries = $self.collection.data('dt-entries');
+                isResponsive = Boolean($self.collection.data('dt-is-responsive'));
+                scrollHeight = $self.collection.data('dt-scroll-height');
+                isShowPaging = Boolean($self.collection.data('dt-is-show-paging'));
+                pageLength = $self.collection.data('dt-page-length');
+                isColumnsSearch = Boolean($self.collection.data('dt-is-columns-search'));
+                isColumnsSearchTheadAfter = Boolean($self.collection.data('dt-is-columns-search-thead-after'));
+                doms = config.dom;
+                action = config.action;
+                columnDefs = config.columnDefs;
+
+                var tables = $self.collection.DataTable({
+                    dom: doms ? doms : "Bfrtip",
+                    pageLength: pageLength,
+                    responsive: isResponsive,
+                    scrollY: scrollHeight ? scrollHeight : '',
+                    scrollCollapse: scrollHeight ? true : false,
+                    autoWidth: false,
+                    paging: isShowPaging ? isShowPaging : config.paging,
+                    bRetrieve: true,  //是否允许从新生成表格
+                    bDestroy: true,  //使用传递的新的初始化对象中的属性构造一个新的表格
+                    //serverSide: true,
+                    //processing: true,
+                    data: config.dataList,
+                    columns: config.columns,
+                    columnDefs: columnDefs,
+                    buttons: config.buttons ? config.buttons : [],
+                    select: {
+                        "style": 'multi',
+                        "selector": 'td:first-child'
+                    },
+                    order: config.order || [[0, 'asc']],
+                    language: language,
+
+                });
+                if (action) {
+                    $("#se").html($(action).html() || '');
+                    tables.draw();
+                }
+                if (scrollHeight) {
+                    $(tables.context[0].nScrollBody).mCustomScrollbar({
+                        scrollbarPosition: 'outside'
+                    });
+                }
+                $($search).on('keyup', function () {
+                    tables.search(this.value).draw();
+                });
+                $($entries).on('change', function () {
+                    var val = $(this).val();
+                    tables.page.len(val).draw();
+                });
+                // tables.buttons().container()
+                //     .appendTo($('.mybutton', tables.table().container()));
+                return tables
+            }
+
+        }
+        function requests(method, url, data) {
+            var ret = '';
+            $.ajax({
+                async: false,
+                url: url, //请求地址
+                type: method,  //提交类似
+                success: function (response) {
+                    ret = response;
+                },
+                error: function (data) {
+                    ret = {};
+                }
+            });
+            return ret
+        }
+
+
+        function makeTables(dataList) {
+            var columns = [
+                { "data": "id" },
+                { "data": "code" },
+                { "data": "name" },
+                { "data": "size" },
+                { "data": "count" },
+                { "data": "exp_time" },
+                { "data": "get_texts", orderable: false, defaultContent: '', className: 'dt-control' },
+                { "data": "name" }
+
+            ];
+            var columnDefs = [
+
+                {
+                    targets: [6],
+                    render: function (data, type, row, meta) {
+                        if (data) {
+                            if (row.get_type === "文本") {
+
+                                return '<a href="#" class="btn btn-tabler btn-icon">' +
+                                    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-plus-fill" viewBox="0 0 16 16">' +
+                                    '<path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM8.5 6v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 1 0z"/>' +
+                                    '</svg></a>'
+
+
+                            }
+                            else {
+                                return '<span class="badge bg-green">' + data + '</span>'
+                            }
+
+                        } else {
+                            return '<span class="badge bg-gray">空</span>'
+                        }
+                    }
+                },
+                {
+                    targets: [7],
+                    render: function (data, type, row, meta) {
+                        return '<div class="btn-group btn-xs">' +
+                            '<button type="button" class="btn btn-danger" value="' + row.id + '" name="filedelete">' +
+                            '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">' +
+                            '<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>' +
+                            '<path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>' +
+                            '</svg></button></div>';
+                    },
+                    "className": "text-center",
+                },
+            ]
+            //InitDataTable('idcAssetsTable', dataList, buttons, columns, columnDefs);
+            // var config = {'dataList': dataList, 'dom': '<"row"<"col-md-6"<"#se">><"col-md-6"B>>t<"row"<"col-sm-5"i><"col-sm-7"p>><"clear">',
+            // 	'buttons': buttons, 'action': "#mytop",};
+            '<"card-body border-bottom py-3"><"d-flex"><"ms-auto text-muted"l><"text-muted"f>>>'
+            var config = {
+                'dataList': dataList, 'dom': '<"card-body border-bottom py-3"<"d-flex"<"#se">>>t<"card-footer d-flex align-items-center"<"m-0 text-muted"i><"pagination m-0 ms-auto"p>><"clear">',
+                'action': "#mytop",
+            };
+            return InitDatatables("#filelist", columns, columnDefs, config)
+        }
+
+
+        const FileList = requests('get', window.location.href + 'list/');
+        var table = makeTables(FileList);
+        function format(d) {
+            // `d` is the original data object for the row
+            return (
+                '<pre><code>' + d.get_short_text + '</code></pre>'
+            );
+        }
+        // Add event listener for opening and closing details
+        $('#filelist tbody').on('click', 'td.dt-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            } else {
+                // Open this row
+                row.child(format(row.data())).show();
+                tr.addClass('shown');
+            }
+        });
+
+        //删除
+        $('#filelist tbody').on('click', "button[name='filedelete']", function () {
+            const cId = $(this).val();
+            const row = $(this).parents('tr');
+            const url = window.location.href + 'code/' + cId;
+            $.confirm({
+                title: '删除确认?',
+                content: "你确定要删除ID为【" + cId + "】数据吗",
+                theme: 'bootstrap',
+                type: 'red',
+                buttons: {
+                    确认: {
+                        btnClass: 'btn-red',
+                        action: function () {
+                            Mydelete(url, "DELETE", table, row);
+                        }
+                    },
+                    取消: {
+                        action: function () {
+                            return true;
+                        }
+                    },
+                }
+            })
+        });
+
+        function Mydelete(url, method, table, row) {
+            const xhr = new XMLHttpRequest();
+            xhr.open(method, url);
+            xhr.send();
+            xhr.onload = function () {
+                const resp = JSON.parse(xhr.responseText)
+                alert(resp.detail)
+            }
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    table.row(row).remove().draw();
+                }
+            }
+        }
+    })
 </script>
 
 </html>

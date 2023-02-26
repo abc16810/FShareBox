@@ -1,13 +1,13 @@
 import math
 from dataclasses import dataclass
-
+from typing import List
 from fastapi import (APIRouter, Body, Depends, Form, HTTPException, Query,
-                     Request, Response)
+                     Request, Response, BackgroundTasks)
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from apps.models import Codes, Codes_Pydantic, Detail, Settings
-from common.utils import app_settings, get_app_settings
+from common.utils import app_settings, get_app_settings, storages
 
 from .lib import (admin_checked, api_key_cookie, authenticate_passwd,
                   create_access_token, decode_token, paginator_num)
@@ -51,7 +51,6 @@ async def login_index(request: Request, set=Depends(get_app_settings), params=De
     )
 
 
-
 @dataclass
 class LoginFormParam:
     """Login Form"""
@@ -68,8 +67,8 @@ class LoginFormParam:
     "/login",
     response_class=RedirectResponse,
     responses={
-                '400': {"model": Detail, "description": "Authentication failed"}
-             }
+        '400': {"model": Detail, "description": "Authentication failed"}
+    }
 )
 async def login(
     request: Request,
@@ -90,7 +89,7 @@ async def login(
         )
     data = {"token": form.password}
     access_token_expires = set.api_manager_password_expire_minute
-    
+
     access_token = create_access_token(
         data=data, exp_minutes=access_token_expires)
     response = RedirectResponse(url='/admin', status_code=303)
@@ -112,10 +111,10 @@ class AdminFormParam:
     summary="后台管理首页"
 )
 async def index(
-    request: Request, 
+    request: Request,
     info=Depends(AdminFormParam),
     set=Depends(get_app_settings)
-    ):
+):
 
     total = await Codes.all().count()
     data = await Codes_Pydantic.from_queryset(Codes.all().offset((info.page - 1) * info.size).limit(info.size))
@@ -134,6 +133,36 @@ async def index(
         media_type="text/html")
 
 
+@router.get(
+    "/list",
+    dependencies=[Depends(admin_checked)],
+    response_model=List[Codes_Pydantic]
+)
+async def file_list(
+    request: Request,
+    set=Depends(get_app_settings)
+):
+    return await Codes_Pydantic.from_queryset(Codes.all())
+
+
+@router.delete(
+    "/code/{code_id}",
+    dependencies=[Depends(admin_checked)],
+    response_model=Detail,
+    responses={404: {"model": Detail}}
+)
+async def delete_user(code_id: int, background_tasks: BackgroundTasks):
+    deleted_item = await Codes.filter(id=code_id)
+    if not deleted_item:
+        raise HTTPException(
+            status_code=404, detail=f"Code {code_id} not found")
+    item = deleted_item[0]
+    await item.delete()
+    if item.type != "text":
+        background_tasks.add_task(
+            storages.delete_files, [item.text])
+    return Detail(detail=f"Deleted code {code_id}")
+
 
 @router.get(
     "/config",
@@ -142,19 +171,18 @@ async def index(
     description="获取系统配置"
 )
 async def config(
-    request: Request, 
+    request: Request,
     set=Depends(get_app_settings)
-    ):
+):
     settings = await Settings.first()
     return templates.TemplateResponse(
         "config.html",
         context={
-            "request": request,    
+            "request": request,
             'prefix': set.api_manager_prefix,
             'settings': settings
         },
         media_type="text/html")
-
 
 
 @dataclass
@@ -183,10 +211,10 @@ class PutParams:
         ge=1, lt=100, default=5
     )
     upload_file_size: int = Body(
-      ...,  gt=1, le=10485760
+        ...,  gt=1, le=10485760
     )
 
-  
+
 @router.put(
     "/config",
     dependencies=[Depends(admin_checked)],
@@ -199,11 +227,8 @@ class PutParams:
     }
 )
 async def config_put(
-    request: Request, 
+    request: Request,
     item=Depends(PutParams)
-    ):
+):
     await Settings.all().update(**item.__dict__)
     return {"detail": "更新成功"}
-
-
-
