@@ -1,7 +1,7 @@
 import math
 from dataclasses import dataclass
 from typing import List
-from fastapi import (APIRouter, Body, Depends, Form, HTTPException, Query,
+from fastapi import (APIRouter, Body, Depends, Form, HTTPException,
                      Request, Response, BackgroundTasks)
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -10,7 +10,7 @@ from apps.models import Codes, Codes_Pydantic, Detail, Settings
 from common.utils import app_settings, get_app_settings, storages
 
 from .lib import (admin_checked, api_key_cookie, authenticate_passwd,
-                  create_access_token, decode_token, paginator_num)
+                  create_access_token, decode_token)
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -97,11 +97,11 @@ async def login(
     return response
 
 
-@dataclass
-class AdminFormParam:
-    """admin post parameters."""
-    page: int = Query(default=1, description="当前页数")
-    size: int = Query(default=10, description="每页显示条数")
+# @dataclass
+# class AdminFormParam:
+#     """admin post parameters."""
+#     page: int = Query(default=1, description="当前页数")
+#     size: int = Query(default=10, description="每页显示条数")
 
 
 @router.get(
@@ -112,25 +112,8 @@ class AdminFormParam:
 )
 async def index(
     request: Request,
-    info=Depends(AdminFormParam),
-    set=Depends(get_app_settings)
 ):
-
-    total = await Codes.all().count()
-    data = await Codes_Pydantic.from_queryset(Codes.all().offset((info.page - 1) * info.size).limit(info.size))
-    page_range = await paginator_num(math.ceil(total/info.size), info.page)
-    return templates.TemplateResponse(
-        "admin.html",
-        context={
-            "request": request,
-            "data": data,
-            'page': info.page,
-            'size': info.size,
-            'total': total,
-            'page_range': page_range,
-            'prefix': set.api_manager_prefix
-        },
-        media_type="text/html")
+    return templates.TemplateResponse("admin.html", {"request": request})
 
 
 @router.get(
