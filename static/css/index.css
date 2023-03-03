@@ -12,7 +12,9 @@
     align-items: center;
 }
 
-
+.nav-pills .nav-link {
+    color: #6c757d;
+  }
 
 .btn-orange {
     --tblr-btn-color: #f76707;
@@ -25,6 +27,7 @@
         padding: 50px 0;
         height: auto;
     }
+
 }
 
 @media (max-width:575.98px) {
@@ -49,7 +52,78 @@
     min-height: 100vh;
 }
 
+.dropzone .dz-preview.dz-file-preview .dz-name {
+    opacity: 1;
+  }
+.dropzone .dz-preview .dz-name {
+    z-index: 20;
+    position: absolute;
+    left: 0;
+    font-size: 13px;
+    min-width: 100%;
+    max-width: 100%;
+    text-align: center;
+  }
+
+.dropzone .dz-preview .dz-name .dz-filename {
+    white-space: nowrap;
+  }
+
+.dropzone .dz-preview .dz-name .dz-filename:not(:hover) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+.dropzone .dz-preview .dz-progress {
+    top: 60%;
+  }
+@media (max-width: 767.9px) {
+    .g-py-15 {
+        padding-top: 1.07143rem !important;
+        padding-bottom: 1.07143rem !important;
+        line-height: 1.7;
+    }
+}
+
+
+@media (min-width: 0px) {
+    .g-px-8 {
+        padding-left: 0.57143rem !important;
+        padding-right: 0.57143rem !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .me-lg-n15 {
+        margin-right: 0rem !important;
+    }
+    .g-px-8 {
+        padding-left: 0.87143rem !important;
+        padding-right: 0.87143rem !important;
+    }
+    .g-py-15 {
+        padding-top: 1.07143rem !important;
+        padding-bottom: 1.07143rem !important;
+    }
+    .w-10 {
+        width: 10%;
+    }
+}
+
 @media (min-width: 992px) {
+    .me-lg-n15 {
+        margin-right: -14rem !important;
+    }
+    .g-px-8 {
+        padding-left: 0.87143rem !important;
+        padding-right: 0.87143rem !important;
+    }
+    .g-py-15 {
+        padding-top: 1.07143rem !important;
+        padding-bottom: 1.07143rem !important;
+    }
+}
+
+@media (min-width: 1200px) {
     .me-lg-n15 {
         margin-right: -10rem !important;
     }
@@ -60,29 +134,22 @@
     }
 }
 
-@media (min-width: 0px) {
-    .g-px-8 {
-        padding-left: 0.57143rem !important;
-        padding-right: 0.57143rem !important;
-    }
 
-    .me-lg-n15 {
-        margin-right: -10rem !important;
 
-    }
-}
 
-.shadow-sm {
+
+
+/* .shadow-sm {
     box-shadow: 0 .125rem .25rem rgba(7, 7, 7, .075) !important;
-}
+} */
 
 .g-font-size-16 {
     font-size: 1.14286rem !important;
 }
 
 .bi-box2 {
-    width: 4em;
-    height: 4em;
+    width: 3em;
+    height: 3em;
 }
 
 .form-selectgroup-item {

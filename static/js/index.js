@@ -42,52 +42,42 @@ $(function () {
 
         }
     });
-    //监听modal事件
-    const myModalEl = document.getElementById('modal-upload')
-    myModalEl.addEventListener('hidden.bs.modal', event => {
-        $('#upload')[0].reset();
-        document.querySelector('.needs-validation').classList.remove('was-validated')
-    })
-    myModalEl.addEventListener('shown.bs.modal', event => {
-        var value = document.querySelector("input[type='radio']:checked").value;
-        if (value == "1") {
-            $("#post-text").attr("hidden", "hidden");
-            $("#post-file").removeAttr("hidden");
-        }
-    })
-    // var myform = document.querySelector('.needs-validation');
-    // myform.addEventListener('submit', event => {
-    //     if (!myform.checkValidity()) {
-    //         event.preventDefault()
-    //         event.stopPropagation()
-    //     }
-    //     myform.classList.add('was-validated')
-    //     }, false)
 });
+
+function ShowAToast(info) {
+    document.getElementById("alertinfo").innerHTML = info
+    new bootstrap.Toast(document.getElementById('AlertliveToast')).show()
+};
+
+function ShowSToast(info) {
+    document.getElementById("sinfo").innerHTML = info
+    new bootstrap.Toast(document.getElementById('SuccessliveToast')).show()
+};
 
 function qrcodeUrl(code) {
     return 'https://api.qrserver.com/v1/create-qr-code/?data=' + window.location.href + '?code=' + code
 };
 
-function get_upload_files(e, data) {
-    var code = data.code;
-    var img_html = qrcodeUrl(code);
-    html = '<div class="card py-3">\n' +
-        '    <div class="row row-0">\n' +
+function get_share_files(e, data) {
+    var f = document.getElementById(e);
+    data.forEach(item => { 
+        const code = item.code;
+        const img_html = qrcodeUrl(code);
+        html = '<div class="list-group-item py-3">\n' +
+        '    <div class="row align-items-center">\n' +
         '        <div class="col">\n' +
         '            <div class="card-body">\n' +
-        '                取件码: <b class="g-font-size-16">' + data.code + '</b>\n' +
-        '                <div class="text-muted">文件名: ' + data.name + '</div>\n' +
+        '                取件码: <b class="g-font-size-16">' + code + '</b>\n' +
+        '                <div class="text-muted">文件名: ' + item.name + '</div>\n' +
         '            </div>\n' +
         '        </div>\n' +
-        '        <div class="col-auto col-md-3">\n' +
+        '        <div class="col-auto">\n' +
         '            <img src="' + img_html + '" class="rounded-start" alt="二维码" width="80" height="80">\n' +
         '        </div>\n' +
         '  </div>\n' +
         '</div>'
-    var f = document.getElementById(e);
-    f.innerHTML += html
-
+        f.innerHTML += html
+    })
 };
 
 function get_rece_files(e, data) {
@@ -112,10 +102,6 @@ function get_rece_files(e, data) {
         '</div>'
     var f = document.getElementById(e);
     f.innerHTML += html
-    const myModal = new bootstrap.Modal('#modal-receive-files')
-    myModal.show(document.getElementById("modal-receive-files"))
-
-
 };
 
 function post_form(e) {
@@ -131,19 +117,14 @@ function post_form(e) {
             $("#c1").focus();
         },
         success: function (data) {
-            ShowSToast(data.detail);
             $("#rece-empty").addClass("d-none");
             $("#rece-list-items").removeClass("d-none");
-            get_rece_files("rece-list-items", data.data)
+            get_rece_files("rece-list-items", data)
+            new bootstrap.Offcanvas('#filesBox').show()
         },
         error: function (data) {
             var info = data.responseJSON.detail;
             ShowAToast(info);
         }
     });
-}
-
-function ShowToast(info, e, k) {
-    document.getElementById(e).innerHTML = info || 'error'
-    new bootstrap.Toast(document.getElementById(k)).show()
 }
