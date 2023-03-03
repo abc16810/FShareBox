@@ -50,7 +50,7 @@ def authenticate_passwd(set, password: str) -> bool:
         return False
     return True
 
-# 自定义分页
+# 自定义分页 弃用
 async def paginator_num(total_page: int, current_page: int) -> list:
     DOT = '.'
     ON_EACH_SIDE = 2
@@ -87,3 +87,9 @@ async def admin_required(token: str = Depends(api_key_cookie), request: Request 
     set = await Set_Pydantic.from_queryset_single(Settings.first())
     if not await decode_token(token, app_settings) and not set.enable_upload:
         raise HTTPException(status_code=403, detail='本站上传功能已关闭，仅管理员可用')
+
+    request_file_size = request.headers.get('content-length', '0')
+    if int(request_file_size) > set.upload_file_size - 500:
+        raise HTTPException(
+                status_code=400, detail='超过最大文件大小限度')
+    

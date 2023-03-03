@@ -1,12 +1,14 @@
-import math
+import uuid
 from dataclasses import dataclass
 from typing import List
-from fastapi import (APIRouter, Body, Depends, Form, HTTPException,
-                     Request, Response, BackgroundTasks)
-from fastapi.responses import HTMLResponse, RedirectResponse
+
+from fastapi import (APIRouter, BackgroundTasks, Body, Depends, Form,
+                     HTTPException, Request, Response)
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from apps.models import Codes, Codes_Pydantic, Detail, Settings
+from apps.models import Codes, Codes_Pydantic, Settings
+from apps.schemas import HTTPNotFoundError
 from common.utils import app_settings, get_app_settings, storages
 
 from .lib import (admin_checked, api_key_cookie, authenticate_passwd,
@@ -32,7 +34,7 @@ class TokenParam:
 @router.get(
     "/login",
     response_class=HTMLResponse,
-    summary="后台登陆"
+    summary="后台登陆-html"
 )
 async def login_index(request: Request, set=Depends(get_app_settings), params=Depends(TokenParam)):
     token = params.token
@@ -66,8 +68,9 @@ class LoginFormParam:
 @router.post(
     "/login",
     response_class=RedirectResponse,
+    summary="登陆表单",
     responses={
-        '400': {"model": Detail, "description": "Authentication failed"}
+        '400': {"model": HTTPNotFoundError, "description": "Authentication failed"}
     }
 )
 async def login(
@@ -83,25 +86,17 @@ async def login(
         return RedirectResponse("%s" % set.api_manager_prefix)
     check = authenticate_passwd(set, form.password)
     if not check:
-        raise HTTPException(
-            status_code=400,
-            detail="Incorrect password"
-        )
+        return JSONResponse(status_code=400, content={'detail': '密码错误'})
+
     data = {"token": form.password}
     access_token_expires = set.api_manager_password_expire_minute
 
     access_token = create_access_token(
         data=data, exp_minutes=access_token_expires)
     response = RedirectResponse(url='/admin', status_code=303)
-    response.set_cookie(key="token", value=access_token)
+    expire = access_token_expires * 60
+    response.set_cookie(key="token", value=access_token, expires=expire)
     return response
-
-
-# @dataclass
-# class AdminFormParam:
-#     """admin post parameters."""
-#     page: int = Query(default=1, description="当前页数")
-#     size: int = Query(default=10, description="每页显示条数")
 
 
 @router.get(
@@ -112,8 +107,9 @@ async def login(
 )
 async def index(
     request: Request,
+    set=Depends(get_app_settings)
 ):
-    return templates.TemplateResponse("admin.html", {"request": request})
+    return templates.TemplateResponse("admin.html", {"request": request, 'prefix': set.api_manager_prefix})
 
 
 @router.get(
@@ -121,30 +117,28 @@ async def index(
     dependencies=[Depends(admin_checked)],
     response_model=List[Codes_Pydantic]
 )
-async def file_list(
-    request: Request,
-    set=Depends(get_app_settings)
-):
+async def file_list():
     return await Codes_Pydantic.from_queryset(Codes.all())
 
 
 @router.delete(
     "/code/{code_id}",
     dependencies=[Depends(admin_checked)],
-    response_model=Detail,
-    responses={404: {"model": Detail}}
+    summary="通过UUID删除",
+    response_model=HTTPNotFoundError,
+    responses={404: {"model": HTTPNotFoundError}}
 )
-async def delete_user(code_id: int, background_tasks: BackgroundTasks):
+async def delete_user(code_id: uuid.UUID, background_tasks: BackgroundTasks):
     deleted_item = await Codes.filter(id=code_id)
     if not deleted_item:
-        raise HTTPException(
-            status_code=404, detail=f"Code {code_id} not found")
+        return JSONResponse(status_code=404, content={'detail': f'Code {code_id} 不存在'})
+
     item = deleted_item[0]
     await item.delete()
     if item.type != "text":
         background_tasks.add_task(
             storages.delete_files, [item.text])
-    return Detail(detail=f"Deleted code {code_id}")
+    return JSONResponse(status_code=200, content={'detail': f'删除 {code_id} 成功'})
 
 
 @router.get(
@@ -202,7 +196,7 @@ class PutParams:
     "/config",
     dependencies=[Depends(admin_checked)],
     description="修改系统配置",
-    response_model=Detail,
+    response_model=HTTPNotFoundError,
     responses={
         200: {
             "description": "Return the JSON item.",
@@ -214,4 +208,5 @@ async def config_put(
     item=Depends(PutParams)
 ):
     await Settings.all().update(**item.__dict__)
-    return {"detail": "更新成功"}
+    return JSONResponse(status_code=200, content={'detail': '更新成功'})
+    

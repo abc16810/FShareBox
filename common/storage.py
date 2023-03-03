@@ -28,23 +28,30 @@ class FileSystemStorage:
         return self.upload_dir / text.lstrip(self.static_url + '/')
 
     @staticmethod
-    async def get_size(file: UploadFile):
-        f = file.file
-        f.seek(0, os.SEEK_END)
-        size = f.tell()
-        f.seek(0, os.SEEK_SET)
-        return size
+    async def get_size(files: List[UploadFile]) -> List[int]:
+        res = []
+        for file in files:
+            f = file.file
+            f.seek(0, os.SEEK_END)
+            size = f.tell()
+            f.seek(0, os.SEEK_SET)
+            res.append(size)
+        return res
 
-    async def get_text(self, file: UploadFile, key: str):
-        ext = file.filename.split('.')[-1]
+    async def get_text(self, files: List[UploadFile], key: str) -> List[str]:
         now = datetime.now()
         path = self.upload_dir / f"upload/{now.year}/{now.month}/{now.day}/"
+        res = []
         if not path.exists():
             path.mkdir(parents=True)
-        text = f"{self.static_url}/{(path / f'{key}.{ext}').relative_to(self.upload_dir)}"
-        return text
 
-    async def save_file(self, file: UploadFile, text: str):
+        for file in files:
+            ext = file.filename.split('.')[-1]
+            text = f"{self.static_url}/{(path / f'{key}.{ext}').relative_to(self.upload_dir)}"
+            res.append(text)
+        return res
+
+    async def save_file(self, file: UploadFile, text: str) -> None:
         filepath = await self.get_filepath(text)
         async with aiofiles.open(filepath, 'wb') as f:
             chunk_size = 256 * 1024

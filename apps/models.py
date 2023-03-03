@@ -6,19 +6,20 @@ from tortoise import Model, fields
 from tortoise.contrib.pydantic import pydantic_model_creator
 
 
-class OkItem(BaseModel):
-    detail: str
-    data: Union[str, Dict[str, Any]]
+class TimestampMixin():
+    created_at = fields.DatetimeField(null=True, auto_now_add=True)
+    modified_at = fields.DatetimeField(null=True, auto_now=True)
 
-
-class Detail(BaseModel):
-    detail: str
-
-
-class Settings(Model):
-    """系统设置"""
+class MyAbstractBaseModel(Model):
     id = fields.IntField(pk=True)
     enable_upload = fields.BooleanField(description="是否开启上传", default=True)
+    class Meta:
+        abstract = True
+        
+class Settings(TimestampMixin, MyAbstractBaseModel):
+    id = fields.UUIDField(pk=True) # Overriding 
+
+    # Adding fields
     max_days = fields.SmallIntField(description="最长保存天数", default=7)
     max_times = fields.SmallIntField(description="最大下载次数", default=10)
     error_count = fields.SmallIntField(description="失败次数", default=5)
@@ -28,22 +29,25 @@ class Settings(Model):
     upload_file_size = fields.IntField(
         description="上传文件大小 Byte", default=10485760)  # 10M 10*1024*1024
 
-    created_at = fields.DatetimeField(auto_now_add=True)
-    modified_at = fields.DatetimeField(auto_now=True)
-
-    
-    def __str__(self):
-        return self.id
     class Meta:
         table = "settings"
+
+    def __str__(self):
+        return self.id     
+
+
 
 
 Set_Pydantic = pydantic_model_creator(Settings, name="Settings")
 SetIn_Pydantic = pydantic_model_creator(Settings, name="SettingsIn", exclude=("id", ), exclude_readonly=True)
 
-class Codes(Model):
+
+class ExpiredMixin(Model):
+    exp_time = fields.DatetimeField(null=True, description="过期时间")
+
+class Codes(TimestampMixin, ExpiredMixin):
     """Code"""
-    id = fields.IntField(pk=True, index=True)
+    id = fields.UUIDField(pk=True, index=True)
     code = fields.CharField(unique=True, max_length=10, index=True)
     key = fields.CharField(max_length=32, unique=True)
     name = fields.CharField(max_length=500, description="分享类型名称")
@@ -53,12 +57,9 @@ class Codes(Model):
     used = fields.BooleanField(default=False)
     count = fields.IntField(default=-1, description="有效次数")
 
-    use_time = fields.DatetimeField(auto_now_add=True)
-    exp_time = fields.DatetimeField(null=True, description="过期时间")
-
     class Meta:
         table = "codes"
-        ordering = ["-use_time"]
+        ordering = ["-created_at"]
 
     def __str__(self):
         return self.code
@@ -80,17 +81,15 @@ class Codes(Model):
     def get_short_text(self) -> str:
         if self.type == "text":
             return self.text[:1024]
-        return '11'
+        return ''
 
     class PydanticMeta:
         computed = ["get_texts", "get_type", "get_short_text"]
 
 
 Codes_Pydantic = pydantic_model_creator(
-    Codes, name="Codes", include=("id", "code", "name", "exp_time", "count", "size"), computed=['get_texts', "get_type", "get_short_text"])
+    Codes, 
+    name="Codes", 
+    include=("id", "code", "name", "exp_time", "count", "size"), 
+    computed=['get_texts', "get_type", "get_short_text"])
 
-
-class Code_Detail(BaseModel):
-    detail: str
-    data: List
-    paginate: Dict['str', int]
